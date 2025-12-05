@@ -1,8 +1,10 @@
-﻿name: Deploy Flowlayer landing page
+name: Deploy Flowlayer landing page
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - master
   workflow_dispatch:
 
 permissions:
