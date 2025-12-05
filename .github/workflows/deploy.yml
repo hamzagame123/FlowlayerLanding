@@ -28,9 +28,9 @@ jobs:
         run: |
           rm -rf dist
           mkdir -p dist
-          cp -r flowlayer/* dist/
-          mkdir -p dist/case-study
-          cp -r case-study/* dist/case-study/
+          cp -r case-study/* dist/
+          mkdir -p dist/flowlayer
+          cp -r flowlayer/* dist/flowlayer/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
