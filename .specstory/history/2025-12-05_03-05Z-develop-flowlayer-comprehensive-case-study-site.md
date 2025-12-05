@@ -5628,47 +5628,130 @@ Let me check what's going on with the repository.</details></think>
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="run_terminal_cmd">
-<details>
-<summary>Tool use: **run_terminal_cmd**</summary>
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: git ls-tree -r main --name-only</summary>
 
-Status: **loading**
+```bash
+git ls-tree -r main --name-only
+```
 
+```
+PS C:\Users\HAMZA\Desktop\Flowlayer&gt; git ls-tree -r main --name-only
+.cursorindexingignore
+.github/workflows/deploy.yml
+.specstory/.gitignore
+.specstory/history/2025-12-05_01-13Z-design-a-revolutionary-mobile-app.md
+.specstory/history/2025-12-05_03-05Z-develop-flowlayer-comprehensive-case-study-site.md
+app.js
+case-study/app.js
+case-study/index.html
+case-study/styles.css
+flowlayer/app.js
+flowlayer/index.html
+flowlayer/styles.css
+index.html
+styles.css
+```
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+All the files are there. But GitHub Pages is giving a 404 for the flowlayer folder. Let me check the deploy.yml to see if there's an issue with the deployment workflow.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: C:\Users\HAMZA\Desktop\Flowlayer\.github\workflows\deploy.yml</summary>
 
 </details>
 </tool-use>
 
 ---
 
+<think><details><summary>Thought Process</summary>
+The deploy.yml is copying from case-study folder to dist/, and also copying flowlayer/ to dist/flowlayer/. 
 
+The issue is that the deploy workflow copies files from `case-study/*` to `dist/`, so it uses the case-study/index.html which has `../flowlayer/index.html` as the iframe src, not `flowlayer/index.html`.
 
----
+I need to update the deploy workflow to use the root files instead, OR fix the iframe path in case-study/index.html.
 
-
-
----
-
-
-
----
-
-
+Let me update the deploy workflow to use the root files.</details></think>
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="write">
-<details>
-<summary>Tool use: **write**</summary>
+Found it! The deploy workflow copies from `case-study/` folder, but that has the wrong iframe path. Let me fix it:
 
-Status: **loading**
+---
 
+<tool-use data-tool-type="write" data-tool-name="write">
 
+<details><summary>Tool use: **write** • Edit file: C:\Users\HAMZA\Desktop\Flowlayer\.github\workflows\deploy.yml</summary>
+
+**Chunk 1**
+Lines added: 3, lines removed: 1
+
+```diff
+@@ -29,5 +29,7 @@
+            rm -rf dist
+            mkdir -p dist
+-           cp -r case-study/* dist/
++           cp index.html dist/
++           cp styles.css dist/
++           cp app.js dist/
+            mkdir -p dist/flowlayer
+            cp -r flowlayer/* dist/flowlayer/
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now let me push this change.</details></think>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_cmd">
+<details><summary>Tool use: **run_terminal_cmd** • Run command: git add -A; git commit -m "Fix deploy workflow to use root files"; git push origin main</summary>
+
+```bash
+git add -A; git commit -m "Fix deploy workflow to use root files"; git push origin main
+```
+
+```
+PS C:\Users\HAMZA\Desktop\Flowlayer&gt; git add -A; git commit -m "Fix deploy workflow to use root files"; git push origin main
+warning: in the working copy of '.github/workflows/deploy.yml', LF will be replaced by CRLF the next time Git touches it
+[main aa7391e] Fix deploy workflow to use root files
+ 2 files changed, 172 insertions(+), 2 deletions(-)
+Enumerating objects: 15, done.
+Counting objects: 100% (15/15), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (8/8), 2.16 KiB | 11.00 KiB/s, done.
+Total 8 (delta 4), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (4/4), completed with 4 local objects.
+To https://github.com/hamzagame123/FlowlayerLanding.git
+   1ef88dc..aa7391e  main -&gt; main
+```
 </details>
 </tool-use>
 
 ---
 
+<think><details><summary>Thought Process</summary>
+The push is done. Now the GitHub Actions workflow will run and deploy the site correctly. Let me wait for a bit and then check the site again.</details></think>
 
+---
+
+Done! ✅ The deploy workflow is now fixed. 
+
+GitHub Actions will automatically redeploy. Wait about 1-2 minutes then refresh: **https://hamzagame123.github.io/FlowlayerLanding/**
+
+You can check the deployment status at: **https://github.com/hamzagame123/FlowlayerLanding/actions**
 
 ---
 
