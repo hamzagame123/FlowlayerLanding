@@ -28,7 +28,9 @@ jobs:
         run: |
           rm -rf dist
           mkdir -p dist
-          cp -r case-study/* dist/
+          cp index.html dist/
+          cp styles.css dist/
+          cp app.js dist/
           mkdir -p dist/flowlayer
           cp -r flowlayer/* dist/flowlayer/
 
