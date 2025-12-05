@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowLayer | Route by How You Feel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <!-- Phone Simulator -->
+    <div class="phone-container">
+        <div class="phone-frame">
+            <div class="phone-screen">
+                <div class="notch"></div>
+                <div class="status-bar">
+                    <span class="phone-time">9:41</span>
+                    <span>⚡ 87%</span>
+                </div>
+
+                <!-- Home Screen -->
+                <div class="app-screen home-screen active" id="homeScreen">
+                    <div class="greeting">
+                        <p class="greeting-time">Good Evening</p>
+                        <h1 class="greeting-text">Where are we <span>going</span>?</h1>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="quick-action" data-action="route">
+                            <div class="quick-action-icon">🛣️</div>
+                            <div class="quick-action-label">New Route</div>
+                        </div>
+                        <div class="quick-action" data-action="map">
+                            <div class="quick-action-icon">🗺️</div>
+                            <div class="quick-action-label">Explore</div>
+                        </div>
+                        <div class="quick-action" data-action="history">
+                            <div class="quick-action-icon">📍</div>
+                            <div class="quick-action-label">Saved</div>
+                        </div>
+                        <div class="quick-action" data-action="settings">
+                            <div class="quick-action-icon">⚙️</div>
+                            <div class="quick-action-label">Settings</div>
+                        </div>
+                    </div>
+
+                    <div class="city-pulse-widget">
+                        <div class="pulse-header">
+                            <span class="pulse-title">Current Conditions</span>
+                            <span class="pulse-live"><span class="pulse-live-dot"></span> Live</span>
+                        </div>
+                        <div class="pulse-stats">
+                            <div class="pulse-stat">
+                                <div class="pulse-stat-value pulse-traffic-value" style="color: #ff9f1c">42</div>
+                                <div class="pulse-stat-label">Traffic</div>
+                            </div>
+                            <div class="pulse-stat">
+                                <div class="pulse-stat-value pulse-events-value" style="color: #f72585">8</div>
+                                <div class="pulse-stat-label">Events</div>
+                            </div>
+                            <div class="pulse-stat">
+                                <div class="pulse-stat-value pulse-weather-value" style="color: #00f5d4">92%</div>
+                                <div class="pulse-stat-label">Clear</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title">Recent Drives</h3>
+                    
+                    <div class="trip-item" data-vibe="scenic">
+                        <div class="trip-vibe" style="background: rgba(6, 214, 160, 0.15)">🏞️</div>
+                        <div class="trip-details">
+                            <div class="trip-destination">Lakefront Parkway</div>
+                            <div class="trip-meta">Scenic • 35 min • 12.4 mi</div>
+                        </div>
+                        <div class="trip-score">
+                            <div class="trip-score-value" style="color: #06d6a0">🏞️</div>
+                        </div>
+                    </div>
+                    
+                    <div class="trip-item" data-vibe="fastest">
+                        <div class="trip-vibe" style="background: rgba(255, 159, 28, 0.15)">⚡</div>
+                        <div class="trip-details">
+                            <div class="trip-destination">Highway 101 Express</div>
+                            <div class="trip-meta">Fastest • 12 min • 8.2 mi</div>
+                        </div>
+                        <div class="trip-score">
+                            <div class="trip-score-value" style="color: #ff9f1c">⚡</div>
+                        </div>
+                    </div>
+                    
+                    <div class="trip-item" data-vibe="adventure">
+                        <div class="trip-vibe" style="background: rgba(247, 37, 133, 0.15)">🎢</div>
+                        <div class="trip-details">
+                            <div class="trip-destination">Downtown Loop</div>
+                            <div class="trip-meta">Adventure • 28 min • 9.1 mi</div>
+                        </div>
+                        <div class="trip-score">
+                            <div class="trip-score-value" style="color: #f72585">🎢</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vibe Selection Screen -->
+                <div class="app-screen vibe-screen" id="vibeScreen">
+                    <div class="vibe-header">
+                        <h2>How do you want to <span>drive</span>?</h2>
+                        <p>Pick your vibe and we'll find the perfect route</p>
+                    </div>
+
+                    <div class="vibe-grid">
+                        <div class="vibe-card-phone" data-vibe="fastest" style="--vibe-color: #ff9f1c">
+                            <div class="vibe-card-icon">⚡</div>
+                            <div class="vibe-card-name">Fastest</div>
+                            <div class="vibe-card-desc">Direct • Quick • Highway</div>
+                        </div>
+                        <div class="vibe-card-phone selected" data-vibe="chill" style="--vibe-color: #00f5d4">
+                            <div class="vibe-card-icon">🌊</div>
+                            <div class="vibe-card-name">Easy & Chill</div>
+                            <div class="vibe-card-desc">Calm • Simple • Relaxed</div>
+                        </div>
+                        <div class="vibe-card-phone" data-vibe="scenic" style="--vibe-color: #06d6a0">
+                            <div class="vibe-card-icon">🏞️</div>
+                            <div class="vibe-card-name">Scenic</div>
+                            <div class="vibe-card-desc">Views • Nature • Lakes</div>
+                        </div>
+                        <div class="vibe-card-phone" data-vibe="adventure" style="--vibe-color: #f72585">
+                            <div class="vibe-card-icon">🎢</div>
+                            <div class="vibe-card-name">Adventure</div>
+                            <div class="vibe-card-desc">Twists • Fun • Clubs</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Map Screen -->
+                <div class="app-screen map-screen" id="mapScreen">
+                    <div class="phone-map">
+                        <canvas id="phoneMapCanvas"></canvas>
+                    </div>
+                    
+                    <div class="map-top-overlay">
+                        <div class="search-bar">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" class="search-input" placeholder="Where to?" value="Golden Gate Bridge">
+                        </div>
+                        <div class="current-vibe-pill">
+                            <span class="vibe-pill-icon current-vibe-icon">🌊</span>
+                            <span class="vibe-pill-text"><span class="current-vibe-name">Easy & Chill</span> route</span>
+                        </div>
+                    </div>
+
+                    <div class="map-bottom-overlay">
+                        <div class="route-preview">
+                            <div class="route-preview-header">
+                                <div class="route-preview-info">
+                                    <h3 class="route-preview-name">Riverside Drive</h3>
+                                    <p class="route-preview-type">Easy & Chill</p>
+                                </div>
+                                <div class="route-preview-eta">
+                                    <div class="route-preview-time">22m</div>
+                                    <div class="route-preview-label route-preview-distance">6.8 mi</div>
+                                </div>
+                            </div>
+                            <div class="route-preview-highlights">
+                                <span class="highlight-item">🛣️ No highways</span>
+                                <span class="highlight-item">↔️ Wide lanes</span>
+                                <span class="highlight-item">🚦 3 lights</span>
+                            </div>
+                        </div>
+                        <button class="start-btn">Let's Go!</button>
+                    </div>
+                </div>
+
+                <!-- Navigation Screen -->
+                <div class="app-screen nav-screen" id="navScreen">
+                    <div class="phone-map">
+                        <canvas id="navMapCanvas"></canvas>
+                    </div>
+                    
+                    <div class="nav-instruction">
+                        <div class="nav-direction">
+                            <div class="nav-arrow">↗</div>
+                            <div class="nav-text">
+                                <h3>Continue on Riverside Dr</h3>
+                                <p>Smooth road ahead • 1.2 miles</p>
+                            </div>
+                        </div>
+                        <div class="nav-progress">
+                            <div class="nav-progress-bar"></div>
+                        </div>
+                    </div>
+
+                    <div class="nav-bottom">
+                        <div class="nav-stats">
+                            <div class="nav-stat">
+                                <div class="nav-stat-value">16m</div>
+                                <div class="nav-stat-label">Left</div>
+                            </div>
+                            <div class="nav-stat">
+                                <div class="nav-stat-value">4.2mi</div>
+                                <div class="nav-stat-label">To Go</div>
+                            </div>
+                            <div class="nav-stat">
+                                <div class="nav-stat-value">9:57</div>
+                                <div class="nav-stat-label">Arrive</div>
+                            </div>
+                        </div>
+                        <div class="emotional-monitor">
+                            <div class="emotion-wave">
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                            </div>
+                            <div class="emotion-text">
+                                <h4>Smooth sailing 🌊</h4>
+                                <p>No stress zones ahead</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Navigation -->
+                <div class="bottom-nav">
+                    <div class="nav-item active" data-screen="home">
+                        <div class="nav-item-icon">🏠</div>
+                        <div class="nav-item-label">Home</div>
+                    </div>
+                    <div class="nav-item" data-screen="vibe">
+                        <div class="nav-item-icon">🎯</div>
+                        <div class="nav-item-label">Route</div>
+                    </div>
+                    <div class="nav-item" data-screen="map">
+                        <div class="nav-item-icon">🗺️</div>
+                        <div class="nav-item-label">Map</div>
+                    </div>
+                    <div class="nav-item" data-screen="nav">
+                        <div class="nav-item-icon">🧭</div>
+                        <div class="nav-item-label">Go</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="logo-section">
+                <h1>Flow<span>Layer</span></h1>
+                <p>Route by How You Feel</p>
+            </div>
+            <div class="header-right">
+                <div class="pulse-indicator">
+                    <div class="pulse-dot"></div>
+                    <span class="pulse-text">Vibe Score: <strong>78</strong></span>
+                </div>
+                <span class="time-display">9:41 PM</span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- City Map -->
+            <div class="card emotional-map-card">
+                <div class="card-header">
+                    <span class="card-title">Route Visualization</span>
+                    <span class="card-badge">Live</span>
+                </div>
+                <div class="map-container">
+                    <canvas id="cityMap"></canvas>
+                </div>
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #ff9f1c; box-shadow: 0 0 6px #ff9f1c"></div>
+                        Highway routes
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #00f5d4; box-shadow: 0 0 6px #00f5d4"></div>
+                        Chill zones
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #06d6a0; box-shadow: 0 0 6px #06d6a0"></div>
+                        Scenic spots
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background: #f72585; box-shadow: 0 0 6px #f72585"></div>
+                        Adventure areas
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vibe Selector -->
+            <div class="card vibe-card">
+                <div class="card-header">
+                    <span class="card-title">Pick Your Vibe</span>
+                </div>
+                <div class="vibe-options">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Live Metrics -->
+            <div class="card metrics-card">
+                <div class="card-header">
+                    <span class="card-title">Current Conditions</span>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #ff9f1c">42</div>
+                        <div class="metric-label">Traffic</div>
+                        <div class="metric-trend down">↓ Light</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #f72585">8</div>
+                        <div class="metric-label">Events</div>
+                        <div class="metric-trend up">↑ Active</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #00f5d4">92%</div>
+                        <div class="metric-label">Weather</div>
+                        <div class="metric-trend up">☀️ Clear</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" style="color: #9b5de5">78</div>
+                        <div class="metric-label">Vibe</div>
+                        <div class="metric-trend up">😎 Good</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Route Comparison -->
+            <div class="card route-card">
+                <div class="card-header">
+                    <span class="card-title">Compare Routes</span>
+                    <span class="card-badge">4 Options</span>
+                </div>
+                <div class="route-options">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- AI Prediction -->
+            <div class="card prediction-card">
+                <div class="card-header">
+                    <span class="card-title">Route Preview</span>
+                </div>
+                <div class="prediction-content">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Future Highway Planner -->
+            <div class="card future-card">
+                <div class="future-header">
+                    <div class="future-title">
+                        <h3>🌿 Future Highway Vision</h3>
+                        <span class="future-badge">2095</span>
+                    </div>
+                </div>
+                <div class="future-content">
+                    <div class="highway-canvas-container">
+                        <canvas id="highwayCanvas"></canvas>
+                    </div>
+                    <div class="highway-elements">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+                <div class="highway-scores">
+                    <div class="highway-score" data-type="eco">
+                        <div class="highway-score-value">65</div>
+                        <div class="highway-score-label">Ecological</div>
+                    </div>
+                    <div class="highway-score" data-type="mobility">
+                        <div class="highway-score-value">73</div>
+                        <div class="highway-score-label">Mobility</div>
+                    </div>
+                    <div class="highway-score" data-type="emotion">
+                        <div class="highway-score-value">68</div>
+                        <div class="highway-score-label">Experience</div>
+                    </div>
+                    <div class="highway-score" data-type="safety">
+                        <div class="highway-score-value">75</div>
+                        <div class="highway-score-label">Safety</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
