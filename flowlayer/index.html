@@ -21,6 +21,36 @@
             <!-- Home Screen -->
             <div class="app-screen home-screen active" id="homeScreen">
                 <div class="screen-content">
+                    <!-- Emotional Check-in Widget -->
+                    <div class="mood-checkin" id="moodCheckin">
+                        <div class="mood-header">
+                            <span class="mood-title">How are you feeling?</span>
+                            <button class="mood-close" id="moodClose">×</button>
+                        </div>
+                        <div class="mood-grid">
+                            <div class="mood-option" data-mood="stressed">
+                                <span class="mood-emoji">😤</span>
+                                <span class="mood-label">Stressed</span>
+                            </div>
+                            <div class="mood-option" data-mood="calm">
+                                <span class="mood-emoji">😌</span>
+                                <span class="mood-label">Calm</span>
+                            </div>
+                            <div class="mood-option" data-mood="adventurous">
+                                <span class="mood-emoji">🤩</span>
+                                <span class="mood-label">Adventurous</span>
+                            </div>
+                            <div class="mood-option" data-mood="tired">
+                                <span class="mood-emoji">😴</span>
+                                <span class="mood-label">Tired</span>
+                            </div>
+                        </div>
+                        <div class="mood-suggestion" id="moodSuggestion" style="display: none;">
+                            <span class="suggestion-icon"></span>
+                            <span class="suggestion-text"></span>
+                        </div>
+                    </div>
+
                     <div class="greeting">
                         <p class="greeting-time">Good Evening</p>
                         <h1 class="greeting-text">Where are we <span>going</span>?</h1>
@@ -35,9 +65,9 @@
                             <div class="quick-action-icon">🗺️</div>
                             <div class="quick-action-label">Explore</div>
                         </div>
-                        <div class="quick-action" data-action="history">
-                            <div class="quick-action-icon">📍</div>
-                            <div class="quick-action-label">Saved</div>
+                        <div class="quick-action" data-action="preferences">
+                            <div class="quick-action-icon">🎚️</div>
+                            <div class="quick-action-label">Preferences</div>
                         </div>
                         <div class="quick-action" data-action="settings">
                             <div class="quick-action-icon">⚙️</div>
@@ -100,6 +130,64 @@
                             <div class="trip-score-value" style="color: #f72585">🎢</div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Preferences Screen (Movement Preferences) -->
+            <div class="app-screen preferences-screen" id="preferencesScreen">
+                <div class="screen-content">
+                    <div class="destination-header">
+                        <button class="back-btn" data-back="home">
+                            <span>←</span>
+                        </button>
+                        <h2>Your Preferences</h2>
+                    </div>
+
+                    <p class="preferences-intro">Help us understand how you like to move.</p>
+
+                    <div class="preference-card">
+                        <h4>When waiting for something, do you prefer to...</h4>
+                        <div class="preference-options">
+                            <div class="preference-option" data-pref="wait-walk" data-value="walk">
+                                <span class="pref-icon">🚶</span>
+                                <span class="pref-label">Walk around</span>
+                            </div>
+                            <div class="preference-option" data-pref="wait-walk" data-value="wait">
+                                <span class="pref-icon">🧘</span>
+                                <span class="pref-label">Stay in one place</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preference-card">
+                        <h4>How do frequent stops make you feel?</h4>
+                        <div class="preference-options">
+                            <div class="preference-option" data-pref="stops" data-value="frustrating">
+                                <span class="pref-icon">😤</span>
+                                <span class="pref-label">Frustrating</span>
+                            </div>
+                            <div class="preference-option" data-pref="stops" data-value="fine">
+                                <span class="pref-icon">😊</span>
+                                <span class="pref-label">Doesn't bother me</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preference-card">
+                        <h4>Do you prefer routes with more things to see?</h4>
+                        <div class="preference-options">
+                            <div class="preference-option" data-pref="visual" data-value="more">
+                                <span class="pref-icon">🌆</span>
+                                <span class="pref-label">More visual stimuli</span>
+                            </div>
+                            <div class="preference-option" data-pref="visual" data-value="less">
+                                <span class="pref-icon">🛤️</span>
+                                <span class="pref-label">Less is more</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="save-preferences-btn" id="savePreferencesBtn">Save Preferences</button>
                 </div>
             </div>
 
@@ -202,11 +290,68 @@
                 </div>
             </div>
 
+            <!-- Route Builder Screen (Build Your Own Route) -->
+            <div class="app-screen route-builder-screen" id="routeBuilderScreen">
+                <div class="screen-content">
+                    <div class="destination-header">
+                        <button class="back-btn" data-back="destination">
+                            <span>←</span>
+                        </button>
+                        <h2>Build Your Route</h2>
+                    </div>
+
+                    <div class="selected-destination-pill route-builder-dest">
+                        <span class="dest-pill-icon">📍</span>
+                        <span class="dest-pill-text" id="routeBuilderDestText">Golden Gate Bridge</span>
+                    </div>
+
+                    <p class="route-builder-intro">What do you want to see along the way?</p>
+
+                    <div class="interest-chips" id="interestChips">
+                        <div class="interest-chip" data-interest="water">
+                            <span class="chip-icon">🌊</span>
+                            <span class="chip-label">Water Views</span>
+                        </div>
+                        <div class="interest-chip" data-interest="parks">
+                            <span class="chip-icon">🌲</span>
+                            <span class="chip-label">Parks</span>
+                        </div>
+                        <div class="interest-chip" data-interest="coffee">
+                            <span class="chip-icon">☕</span>
+                            <span class="chip-label">Coffee Shops</span>
+                        </div>
+                        <div class="interest-chip" data-interest="art">
+                            <span class="chip-icon">🎨</span>
+                            <span class="chip-label">Street Art</span>
+                        </div>
+                        <div class="interest-chip" data-interest="historic">
+                            <span class="chip-icon">🏛️</span>
+                            <span class="chip-label">Historic Sites</span>
+                        </div>
+                        <div class="interest-chip" data-interest="food">
+                            <span class="chip-icon">🍕</span>
+                            <span class="chip-label">Food Spots</span>
+                        </div>
+                        <div class="interest-chip" data-interest="mountains">
+                            <span class="chip-icon">⛰️</span>
+                            <span class="chip-label">Mountains</span>
+                        </div>
+                        <div class="interest-chip" data-interest="nightlife">
+                            <span class="chip-icon">🍸</span>
+                            <span class="chip-label">Nightlife</span>
+                        </div>
+                    </div>
+
+                    <button class="continue-btn" id="routeBuilderContinue">Continue to Vibes</button>
+                    <button class="skip-btn" id="routeBuilderSkip">Skip — Pick a vibe instead</button>
+                </div>
+            </div>
+
             <!-- Vibe Selection Screen -->
             <div class="app-screen vibe-screen" id="vibeScreen">
                 <div class="screen-content">
                     <div class="vibe-header">
-                        <button class="back-btn" data-back="destination">
+                        <button class="back-btn" data-back="routeBuilder">
                             <span>←</span>
                         </button>
                         <div class="vibe-header-text">
@@ -220,6 +365,12 @@
                         <span class="dest-pill-text" id="selectedDestText">Golden Gate Bridge</span>
                     </div>
 
+                    <!-- Selected interests display -->
+                    <div class="selected-interests" id="selectedInterestsDisplay" style="display: none;">
+                        <span class="interests-label">Looking for:</span>
+                        <div class="interests-list" id="selectedInterestsList"></div>
+                    </div>
+
                     <div class="vibe-grid">
                         <div class="vibe-card-phone" data-vibe="fastest" style="--vibe-color: #ff9f1c">
                             <div class="vibe-card-icon">⚡</div>
@@ -230,16 +381,47 @@
                             <div class="vibe-card-icon">🌊</div>
                             <div class="vibe-card-name">Easy & Chill</div>
                             <div class="vibe-card-desc">Calm • Simple • Relaxed</div>
+                            <!-- Customization options for Chill -->
+                            <div class="vibe-customize" data-for="chill">
+                                <div class="customize-chip selected" data-option="wide-roads">↔️ Wide Roads</div>
+                                <div class="customize-chip" data-option="low-traffic">🚗 Low Traffic</div>
+                                <div class="customize-chip" data-option="quiet">🤫 Quiet Areas</div>
+                            </div>
                         </div>
                         <div class="vibe-card-phone" data-vibe="scenic" style="--vibe-color: #06d6a0">
                             <div class="vibe-card-icon">🏞️</div>
                             <div class="vibe-card-name">Scenic</div>
                             <div class="vibe-card-desc">Views • Nature • Lakes</div>
+                            <!-- Customization options for Scenic -->
+                            <div class="vibe-customize" data-for="scenic">
+                                <div class="customize-chip selected" data-option="mountains">⛰️ Mountains</div>
+                                <div class="customize-chip selected" data-option="lakes">🌊 Lakes</div>
+                                <div class="customize-chip" data-option="parks">🌲 Parks</div>
+                                <div class="customize-chip" data-option="beaches">🏖️ Beaches</div>
+                            </div>
                         </div>
                         <div class="vibe-card-phone" data-vibe="adventure" style="--vibe-color: #f72585">
                             <div class="vibe-card-icon">🎢</div>
                             <div class="vibe-card-name">Adventure</div>
                             <div class="vibe-card-desc">Twists • Fun • Clubs</div>
+                            <!-- Customization options for Adventure -->
+                            <div class="vibe-customize" data-for="adventure">
+                                <div class="customize-chip selected" data-option="clubs">🍸 Clubs & Bars</div>
+                                <div class="customize-chip" data-option="attractions">🎡 Tourist Spots</div>
+                                <div class="customize-chip" data-option="street-art">🎨 Street Art</div>
+                                <div class="customize-chip" data-option="food">🍕 Food Spots</div>
+                            </div>
+                            <!-- Explorer Mode Toggle -->
+                            <div class="explorer-toggle" data-vibe="adventure">
+                                <div class="explorer-toggle-header">
+                                    <span class="explorer-icon">🧭</span>
+                                    <span class="explorer-label">Explorer Mode</span>
+                                    <div class="toggle-switch" id="explorerToggle">
+                                        <div class="toggle-knob"></div>
+                                    </div>
+                                </div>
+                                <p class="explorer-desc">Hide the route. Just you and the destination.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -260,6 +442,11 @@
                         <span class="vibe-pill-icon current-vibe-icon">🌊</span>
                         <span class="vibe-pill-text"><span class="current-vibe-name">Easy & Chill</span> route</span>
                     </div>
+                    <!-- Explorer Mode indicator -->
+                    <div class="explorer-mode-indicator" id="explorerModeIndicator" style="display: none;">
+                        <span class="explorer-indicator-icon">🧭</span>
+                        <span class="explorer-indicator-text">Explorer Mode Active</span>
+                    </div>
                 </div>
 
                 <div class="map-bottom-overlay">
@@ -268,6 +455,7 @@
                             <div class="route-preview-info">
                                 <h3 class="route-preview-name">Riverside Drive</h3>
                                 <p class="route-preview-type">Easy & Chill</p>
+                                <div class="route-perception" style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; display: none;"></div>
                             </div>
                             <div class="route-preview-eta">
                                 <div class="route-preview-time">22m</div>
@@ -278,6 +466,11 @@
                             <span class="highlight-item">🛣️ No highways</span>
                             <span class="highlight-item">↔️ Wide lanes</span>
                             <span class="highlight-item">🚦 3 lights</span>
+                        </div>
+                        <!-- Show selected customizations -->
+                        <div class="route-customizations" id="routeCustomizations" style="display: none;">
+                            <span class="customizations-label">Your picks:</span>
+                            <div class="customizations-list" id="customizationsList"></div>
                         </div>
                     </div>
                     <button class="start-btn">Let's Go!</button>
