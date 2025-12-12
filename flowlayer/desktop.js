@@ -14,23 +14,23 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('FlowLayer Desktop ready!');
 });
 
-// Desktop Sidebar Navigation
+// Desktop Bottom Navigation
 function initDesktopNavigation() {
-    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+    document.querySelectorAll('.desktop-bottom-nav .nav-item').forEach(item => {
         item.addEventListener('click', () => {
             const screen = item.dataset.screen;
             if (screen) {
                 switchDesktopScreen(screen);
-                updateSidebarActive(screen);
+                updateBottomNavActive(screen);
             }
         });
     });
 }
 
-// Update sidebar active state
-function updateSidebarActive(screen) {
-    document.querySelectorAll('.sidebar-nav-item').forEach(n => n.classList.remove('active'));
-    const activeItem = document.querySelector(`.sidebar-nav-item[data-screen="${screen}"]`);
+// Update bottom nav active state
+function updateBottomNavActive(screen) {
+    document.querySelectorAll('.desktop-bottom-nav .nav-item').forEach(n => n.classList.remove('active'));
+    const activeItem = document.querySelector(`.desktop-bottom-nav .nav-item[data-screen="${screen}"]`);
     if (activeItem) activeItem.classList.add('active');
 }
 
@@ -72,13 +72,13 @@ function initDesktopScreens() {
             const target = action.dataset.action;
             if (target === 'route') {
                 switchDesktopScreen('destination');
-                updateSidebarActive('destination');
+                updateBottomNavActive('destination');
             } else if (target === 'map') {
                 switchDesktopScreen('map');
-                updateSidebarActive('map');
+                updateBottomNavActive('map');
             } else if (target === 'preferences') {
                 switchDesktopScreen('preferences');
-                updateSidebarActive('preferences');
+                updateBottomNavActive('preferences');
             }
         });
     });
@@ -100,7 +100,7 @@ function initDesktopScreens() {
     if (continueBtn) {
         continueBtn.addEventListener('click', () => {
             switchDesktopScreen('vibe');
-            updateSidebarActive('vibe');
+            updateBottomNavActive('vibe');
         });
     }
 
@@ -112,7 +112,7 @@ function initDesktopScreens() {
                 state.selectedInterests = [];
             }
             switchDesktopScreen('vibe');
-            updateSidebarActive('vibe');
+            updateBottomNavActive('vibe');
         });
     }
 
@@ -134,7 +134,7 @@ function initDesktopScreens() {
 
             setTimeout(() => {
                 switchDesktopScreen('map');
-                updateSidebarActive('map');
+                updateBottomNavActive('map');
             }, 300);
         });
     });
@@ -152,7 +152,7 @@ function initDesktopScreens() {
     if (endNavBtn) {
         endNavBtn.addEventListener('click', () => {
             switchDesktopScreen('home');
-            updateSidebarActive('home');
+            updateBottomNavActive('home');
         });
     }
 
@@ -165,7 +165,7 @@ function initDesktopScreens() {
                 updateVibeDisplay();
             }
             switchDesktopScreen('map');
-            updateSidebarActive('map');
+            updateBottomNavActive('map');
         });
     });
 
@@ -175,7 +175,7 @@ function initDesktopScreens() {
         savePrefsBtn.addEventListener('click', () => {
             console.log('Preferences saved');
             switchDesktopScreen('home');
-            updateSidebarActive('home');
+            updateBottomNavActive('home');
         });
     }
 }
