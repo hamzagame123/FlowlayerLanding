@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#050508">
     <title>FlowLayer | Route by How You Feel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="bg-gradient"></div>
-    
+
     <!-- App Container -->
     <div class="app-container">
         <div class="app-screen-wrapper">
@@ -97,7 +102,7 @@
                     </div>
 
                     <h3 class="section-title">Recent Drives</h3>
-                    
+
                     <div class="trip-item" data-vibe="scenic">
                         <div class="trip-vibe" style="background: rgba(6, 214, 160, 0.15)">🏞️</div>
                         <div class="trip-details">
@@ -108,7 +113,7 @@
                             <div class="trip-score-value" style="color: #06d6a0">🏞️</div>
                         </div>
                     </div>
-                    
+
                     <div class="trip-item" data-vibe="fastest">
                         <div class="trip-vibe" style="background: rgba(255, 159, 28, 0.15)">⚡</div>
                         <div class="trip-details">
@@ -119,7 +124,7 @@
                             <div class="trip-score-value" style="color: #ff9f1c">⚡</div>
                         </div>
                     </div>
-                    
+
                     <div class="trip-item" data-vibe="adventure">
                         <div class="trip-vibe" style="background: rgba(247, 37, 133, 0.15)">🎢</div>
                         <div class="trip-details">
@@ -204,12 +209,13 @@
                     <div class="search-container">
                         <div class="search-bar-main">
                             <span class="search-icon">🔍</span>
-                            <input type="text" class="search-input-main" placeholder="Where do you want to go?" id="destinationInput">
+                            <input type="text" class="search-input-main" placeholder="Where do you want to go?"
+                                id="destinationInput">
                         </div>
                     </div>
 
                     <h3 class="section-title">Recent Destinations</h3>
-                    
+
                     <div class="destination-list">
                         <div class="destination-item" data-destination="Golden Gate Bridge">
                             <div class="destination-icon">🌉</div>
@@ -219,7 +225,7 @@
                             </div>
                             <div class="destination-distance">4.2 mi</div>
                         </div>
-                        
+
                         <div class="destination-item" data-destination="Fisherman's Wharf">
                             <div class="destination-icon">🦀</div>
                             <div class="destination-info">
@@ -228,7 +234,7 @@
                             </div>
                             <div class="destination-distance">2.8 mi</div>
                         </div>
-                        
+
                         <div class="destination-item" data-destination="Twin Peaks">
                             <div class="destination-icon">⛰️</div>
                             <div class="destination-info">
@@ -237,7 +243,7 @@
                             </div>
                             <div class="destination-distance">3.5 mi</div>
                         </div>
-                        
+
                         <div class="destination-item" data-destination="Chinatown">
                             <div class="destination-icon">🏮</div>
                             <div class="destination-info">
@@ -246,7 +252,7 @@
                             </div>
                             <div class="destination-distance">1.2 mi</div>
                         </div>
-                        
+
                         <div class="destination-item" data-destination="Palace of Fine Arts">
                             <div class="destination-icon">🏛️</div>
                             <div class="destination-info">
@@ -267,7 +273,7 @@
                     </div>
 
                     <h3 class="section-title">Saved Places</h3>
-                    
+
                     <div class="destination-list">
                         <div class="destination-item" data-destination="Home">
                             <div class="destination-icon">🏠</div>
@@ -277,7 +283,7 @@
                             </div>
                             <div class="destination-distance">—</div>
                         </div>
-                        
+
                         <div class="destination-item" data-destination="Work">
                             <div class="destination-icon">💼</div>
                             <div class="destination-info">
@@ -432,11 +438,12 @@
                 <div class="phone-map">
                     <canvas id="phoneMapCanvas"></canvas>
                 </div>
-                
+
                 <div class="map-top-overlay">
                     <div class="search-bar">
                         <button class="back-btn-small" data-back="vibe">←</button>
-                        <input type="text" class="search-input" placeholder="Where to?" value="Golden Gate Bridge" id="mapSearchInput">
+                        <input type="text" class="search-input" placeholder="Where to?" value="Golden Gate Bridge"
+                            id="mapSearchInput">
                     </div>
                     <div class="current-vibe-pill">
                         <span class="vibe-pill-icon current-vibe-icon">🌊</span>
@@ -455,7 +462,9 @@
                             <div class="route-preview-info">
                                 <h3 class="route-preview-name">Riverside Drive</h3>
                                 <p class="route-preview-type">Easy & Chill</p>
-                                <div class="route-perception" style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; display: none;"></div>
+                                <div class="route-perception"
+                                    style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; display: none;">
+                                </div>
                             </div>
                             <div class="route-preview-eta">
                                 <div class="route-preview-time">22m</div>
@@ -482,7 +491,7 @@
                 <div class="phone-map">
                     <canvas id="navMapCanvas"></canvas>
                 </div>
-                
+
                 <div class="nav-instruction">
                     <div class="nav-direction">
                         <div class="nav-arrow">↗</div>
@@ -548,8 +557,15 @@
                 <div class="nav-item-label">Go</div>
             </div>
         </div>
+
+        <!-- Desktop Version Link -->
+        <a href="desktop.html" class="desktop-version-link">
+            <span class="desktop-icon">🖥️</span>
+            <span class="desktop-text">Desktop Version</span>
+        </a>
     </div>
 
     <script src="app.js"></script>
 </body>
+
 </html>

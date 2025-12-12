@@ -37,7 +37,7 @@ body {
 .bg-gradient {
     position: fixed;
     inset: 0;
-    background: 
+    background:
         radial-gradient(ellipse at 20% 0%, rgba(0, 245, 212, 0.08) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 100%, rgba(155, 93, 229, 0.08) 0%, transparent 50%);
     pointer-events: none;
@@ -163,7 +163,8 @@ body {
     transition: all 0.2s;
 }
 
-.mood-option:hover, .mood-option.selected {
+.mood-option:hover,
+.mood-option.selected {
     background: rgba(155, 93, 229, 0.2);
     border-color: var(--accent-purple);
 }
@@ -190,8 +191,15 @@ body {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .suggestion-icon {
@@ -521,8 +529,15 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 .explorer-indicator-icon {
@@ -646,7 +661,8 @@ body {
     transition: all 0.2s;
 }
 
-.quick-action:hover, .quick-action:active {
+.quick-action:hover,
+.quick-action:active {
     background: rgba(0, 245, 212, 0.08);
     border-color: rgba(0, 245, 212, 0.3);
     transform: translateY(-2px);
@@ -702,8 +718,17 @@ body {
 }
 
 @keyframes livePulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(1.3);
+    }
 }
 
 .pulse-stats {
@@ -751,7 +776,8 @@ body {
     transition: all 0.2s;
 }
 
-.trip-item:hover, .trip-item:active {
+.trip-item:hover,
+.trip-item:active {
     background: rgba(255, 255, 255, 0.04);
     transform: translateX(4px);
 }
@@ -786,14 +812,16 @@ body {
 }
 
 /* Headers */
-.destination-header, .vibe-header {
+.destination-header,
+.vibe-header {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
 }
 
-.destination-header h2, .vibe-header-text h2 {
+.destination-header h2,
+.vibe-header-text h2 {
     font-size: 22px;
     font-weight: 700;
 }
@@ -896,7 +924,8 @@ body {
     transition: all 0.2s;
 }
 
-.destination-item:hover, .destination-item:active {
+.destination-item:hover,
+.destination-item:active {
     background: rgba(0, 245, 212, 0.05);
     border-color: rgba(0, 245, 212, 0.2);
 }
@@ -1210,8 +1239,15 @@ body {
 }
 
 @keyframes progressPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 .nav-bottom {
@@ -1274,15 +1310,36 @@ body {
     animation: waveAnim 0.8s infinite ease-in-out;
 }
 
-.wave-bar:nth-child(1) { animation-delay: 0s; }
-.wave-bar:nth-child(2) { animation-delay: 0.1s; }
-.wave-bar:nth-child(3) { animation-delay: 0.2s; }
-.wave-bar:nth-child(4) { animation-delay: 0.3s; }
-.wave-bar:nth-child(5) { animation-delay: 0.4s; }
+.wave-bar:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.wave-bar:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.wave-bar:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.wave-bar:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.wave-bar:nth-child(5) {
+    animation-delay: 0.4s;
+}
 
 @keyframes waveAnim {
-    0%, 100% { transform: scaleY(0.5); }
-    50% { transform: scaleY(1); }
+
+    0%,
+    100% {
+        transform: scaleY(0.5);
+    }
+
+    50% {
+        transform: scaleY(1);
+    }
 }
 
 .emotion-text h4 {
@@ -1360,8 +1417,38 @@ body {
     .quick-actions {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .mood-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+}
+
+/* Desktop Version Link */
+.desktop-version-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid var(--border-subtle);
+    color: var(--text-tertiary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.desktop-version-link:hover {
+    background: rgba(0, 245, 212, 0.08);
+    color: var(--accent-cyan);
+}
+
+.desktop-icon {
+    font-size: 16px;
+}
+
+.desktop-text {
+    letter-spacing: 0.5px;
 }
