@@ -63,6 +63,13 @@ body::-webkit-scrollbar {
     display: flex;
     flex-direction: column;
     z-index: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.app-container::-webkit-scrollbar {
+    display: none;
 }
 
 .app-screen-wrapper {
