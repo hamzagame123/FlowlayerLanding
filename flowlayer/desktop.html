@@ -4,581 +4,209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#050508">
-    <title>FlowLayer | Desktop Experience</title>
+    <title>FlowLayer | Desktop Preview</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="desktop.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #050508;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background:
+                radial-gradient(ellipse at 20% 0%, rgba(0, 245, 212, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(155, 93, 229, 0.08) 0%, transparent 50%),
+                #050508;
+        }
+
+        .desktop-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .header-text {
+            text-align: center;
+            color: #fff;
+        }
+
+        .header-text h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header-text h1 span {
+            background: linear-gradient(135deg, #00f5d4, #9b5de5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-text p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        /* iPhone Frame */
+        .iphone-frame {
+            position: relative;
+            width: 375px;
+            height: 812px;
+            background: #1a1a1a;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow:
+                0 0 0 3px #2a2a2a,
+                0 0 0 6px #1a1a1a,
+                0 50px 100px rgba(0, 0, 0, 0.5),
+                inset 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Side buttons */
+        .iphone-frame::before {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: 120px;
+            width: 3px;
+            height: 30px;
+            background: #2a2a2a;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .iphone-frame::after {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: 170px;
+            width: 3px;
+            height: 60px;
+            background: #2a2a2a;
+            border-radius: 2px 0 0 2px;
+            box-shadow: 0 50px 0 #2a2a2a;
+        }
+
+        .power-button {
+            position: absolute;
+            right: -3px;
+            top: 170px;
+            width: 3px;
+            height: 80px;
+            background: #2a2a2a;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Inner screen */
+        .iphone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 45px;
+            overflow: hidden;
+            position: relative;
+            background: #050508;
+        }
+
+        /* Notch */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 34px;
+            background: #1a1a1a;
+            border-radius: 0 0 20px 20px;
+            z-index: 100;
+        }
+
+        .notch::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+        }
+
+        .notch::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 25px;
+            width: 10px;
+            height: 10px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        /* Embedded iframe */
+        .iphone-screen iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 45px;
+        }
+
+        /* Home indicator */
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 135px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            z-index: 100;
+        }
+
+        /* Responsive */
+        @media (max-height: 900px) {
+            .iphone-frame {
+                transform: scale(0.85);
+            }
+        }
+
+        @media (max-height: 750px) {
+            .iphone-frame {
+                transform: scale(0.7);
+            }
+        }
+    </style>
 </head>
 
-<body class="desktop-body">
-    <div class="bg-gradient"></div>
+<body>
+    <div class="desktop-wrapper">
+        <div class="header-text">
+            <h1>🛣️ <span>FlowLayer</span></h1>
+            <p>Route by How You Feel</p>
+        </div>
 
-    <!-- Desktop Layout -->
-    <div class="desktop-container">
-        <!-- Main Content Area -->
-        <main class="desktop-main">
-            <!-- Home Screen -->
-            <section class="desktop-screen active" id="homeScreen">
-                <div class="desktop-header">
-                    <div class="greeting">
-                        <p class="greeting-time">Good Evening</p>
-                        <h1 class="greeting-text">Where are we <span>going</span>?</h1>
-                    </div>
-                </div>
-
-                <div class="desktop-content-grid">
-                    <!-- Mood Check-in -->
-                    <div class="desktop-card mood-card">
-                        <div class="mood-checkin">
-                            <div class="mood-header">
-                                <span class="mood-title">How are you feeling?</span>
-                                <button class="mood-close" id="moodClose">×</button>
-                            </div>
-                            <div class="mood-grid">
-                                <div class="mood-option" data-mood="stressed">
-                                    <span class="mood-emoji">😤</span>
-                                    <span class="mood-label">Stressed</span>
-                                </div>
-                                <div class="mood-option" data-mood="calm">
-                                    <span class="mood-emoji">😌</span>
-                                    <span class="mood-label">Calm</span>
-                                </div>
-                                <div class="mood-option" data-mood="adventurous">
-                                    <span class="mood-emoji">🤩</span>
-                                    <span class="mood-label">Adventurous</span>
-                                </div>
-                                <div class="mood-option" data-mood="tired">
-                                    <span class="mood-emoji">😴</span>
-                                    <span class="mood-label">Tired</span>
-                                </div>
-                            </div>
-                            <div class="mood-suggestion" id="moodSuggestion" style="display: none;">
-                                <span class="suggestion-icon"></span>
-                                <span class="suggestion-text"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Actions -->
-                    <div class="desktop-card quick-actions-card">
-                        <h3 class="card-title">Quick Actions</h3>
-                        <div class="quick-actions desktop-quick-actions">
-                            <div class="quick-action" data-action="route">
-                                <div class="quick-action-icon">🛣️</div>
-                                <div class="quick-action-label">New Route</div>
-                            </div>
-                            <div class="quick-action" data-action="map">
-                                <div class="quick-action-icon">🗺️</div>
-                                <div class="quick-action-label">Explore</div>
-                            </div>
-                            <div class="quick-action" data-action="preferences">
-                                <div class="quick-action-icon">🎚️</div>
-                                <div class="quick-action-label">Preferences</div>
-                            </div>
-                            <div class="quick-action" data-action="settings">
-                                <div class="quick-action-icon">⚙️</div>
-                                <div class="quick-action-label">Settings</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- City Pulse -->
-                    <div class="desktop-card pulse-card">
-                        <div class="city-pulse-widget">
-                            <div class="pulse-header">
-                                <span class="pulse-title">Current Conditions</span>
-                                <span class="pulse-live"><span class="pulse-live-dot"></span> Live</span>
-                            </div>
-                            <div class="pulse-stats">
-                                <div class="pulse-stat">
-                                    <div class="pulse-stat-value pulse-traffic-value" style="color: #ff9f1c">42</div>
-                                    <div class="pulse-stat-label">Traffic</div>
-                                </div>
-                                <div class="pulse-stat">
-                                    <div class="pulse-stat-value pulse-events-value" style="color: #f72585">8</div>
-                                    <div class="pulse-stat-label">Events</div>
-                                </div>
-                                <div class="pulse-stat">
-                                    <div class="pulse-stat-value pulse-weather-value" style="color: #00f5d4">92%</div>
-                                    <div class="pulse-stat-label">Clear</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Drives -->
-                    <div class="desktop-card recent-drives-card">
-                        <h3 class="card-title">Recent Drives</h3>
-                        <div class="trips-list">
-                            <div class="trip-item" data-vibe="scenic">
-                                <div class="trip-vibe" style="background: rgba(6, 214, 160, 0.15)">🏞️</div>
-                                <div class="trip-details">
-                                    <div class="trip-destination">Lakefront Parkway</div>
-                                    <div class="trip-meta">Scenic • 35 min • 12.4 mi</div>
-                                </div>
-                                <div class="trip-score">
-                                    <div class="trip-score-value" style="color: #06d6a0">🏞️</div>
-                                </div>
-                            </div>
-
-                            <div class="trip-item" data-vibe="fastest">
-                                <div class="trip-vibe" style="background: rgba(255, 159, 28, 0.15)">⚡</div>
-                                <div class="trip-details">
-                                    <div class="trip-destination">Highway 101 Express</div>
-                                    <div class="trip-meta">Fastest • 12 min • 8.2 mi</div>
-                                </div>
-                                <div class="trip-score">
-                                    <div class="trip-score-value" style="color: #ff9f1c">⚡</div>
-                                </div>
-                            </div>
-
-                            <div class="trip-item" data-vibe="adventure">
-                                <div class="trip-vibe" style="background: rgba(247, 37, 133, 0.15)">🎢</div>
-                                <div class="trip-details">
-                                    <div class="trip-destination">Downtown Loop</div>
-                                    <div class="trip-meta">Adventure • 28 min • 9.1 mi</div>
-                                </div>
-                                <div class="trip-score">
-                                    <div class="trip-score-value" style="color: #f72585">🎢</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Destination Screen -->
-            <section class="desktop-screen" id="destinationScreen">
-                <div class="desktop-header">
-                    <h2>Choose Destination</h2>
-                </div>
-
-                <div class="desktop-content">
-                    <div class="search-container desktop-search">
-                        <div class="search-bar-main">
-                            <span class="search-icon">🔍</span>
-                            <input type="text" class="search-input-main" placeholder="Where do you want to go?"
-                                id="destinationInput">
-                        </div>
-                    </div>
-
-                    <div class="destinations-grid">
-                        <div class="destinations-column">
-                            <h3 class="section-title">Recent Destinations</h3>
-                            <div class="destination-list">
-                                <div class="destination-item" data-destination="Golden Gate Bridge">
-                                    <div class="destination-icon">🌉</div>
-                                    <div class="destination-info">
-                                        <div class="destination-name">Golden Gate Bridge</div>
-                                        <div class="destination-address">Golden Gate Bridge, San Francisco, CA</div>
-                                    </div>
-                                    <div class="destination-distance">4.2 mi</div>
-                                </div>
-
-                                <div class="destination-item" data-destination="Fisherman's Wharf">
-                                    <div class="destination-icon">🦀</div>
-                                    <div class="destination-info">
-                                        <div class="destination-name">Fisherman's Wharf</div>
-                                        <div class="destination-address">Pier 39, San Francisco, CA</div>
-                                    </div>
-                                    <div class="destination-distance">2.8 mi</div>
-                                </div>
-
-                                <div class="destination-item" data-destination="Twin Peaks">
-                                    <div class="destination-icon">⛰️</div>
-                                    <div class="destination-info">
-                                        <div class="destination-name">Twin Peaks</div>
-                                        <div class="destination-address">Twin Peaks Blvd, San Francisco, CA</div>
-                                    </div>
-                                    <div class="destination-distance">3.5 mi</div>
-                                </div>
-
-                                <div class="destination-item" data-destination="Chinatown">
-                                    <div class="destination-icon">🏮</div>
-                                    <div class="destination-info">
-                                        <div class="destination-name">Chinatown</div>
-                                        <div class="destination-address">Grant Avenue, San Francisco, CA</div>
-                                    </div>
-                                    <div class="destination-distance">1.2 mi</div>
-                                </div>
-
-                                <div class="destination-item" data-destination="Palace of Fine Arts">
-                                    <div class="destination-icon">🏛️</div>
-                                    <div class="destination-info">
-                                        <div class="destination-name">Palace of Fine Arts</div>
-                                        <div class="destination-address">3601 Lyon St, San Francisco, CA</div>
-                                    </div>
-                                    <div class="destination-distance">3.1 mi</div>
-                                </div>
-
-                                <div class="destination-item" data-destination="Alcatraz Ferry">
-                                    <div class="destination-icon">🚢</div>
-                                    <div class="destination-info">
-                                        <div class="destination-name">Alcatraz Ferry</div>
-                                        <div class="destination-address">Pier 33, San Francisco, CA</div>
-                                    </div>
-                                    <div class="destination-distance">2.4 mi</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="destinations-column">
-                            <h3 class="section-title">Saved Places</h3>
-                            <div class="destination-list">
-                                <div class="destination-item" data-destination="Home">
-                                    <div class="destination-icon">🏠</div>
-                                    <div class="destination-info">
-                                        <div class="destination-name">Home</div>
-                                        <div class="destination-address">123 Main St, San Francisco, CA</div>
-                                    </div>
-                                    <div class="destination-distance">—</div>
-                                </div>
-
-                                <div class="destination-item" data-destination="Work">
-                                    <div class="destination-icon">💼</div>
-                                    <div class="destination-info">
-                                        <div class="destination-name">Work</div>
-                                        <div class="destination-address">456 Market St, San Francisco, CA</div>
-                                    </div>
-                                    <div class="destination-distance">5.8 mi</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Route Builder Screen -->
-            <section class="desktop-screen" id="routeBuilderScreen">
-                <div class="desktop-header">
-                    <h2>Build Your Route</h2>
-                </div>
-
-                <div class="desktop-content">
-                    <div class="selected-destination-pill route-builder-dest">
-                        <span class="dest-pill-icon">📍</span>
-                        <span class="dest-pill-text" id="routeBuilderDestText">Golden Gate Bridge</span>
-                    </div>
-
-                    <p class="route-builder-intro">What do you want to see along the way?</p>
-
-                    <div class="interest-chips desktop-interest-chips" id="interestChips">
-                        <div class="interest-chip" data-interest="water">
-                            <span class="chip-icon">🌊</span>
-                            <span class="chip-label">Water Views</span>
-                        </div>
-                        <div class="interest-chip" data-interest="parks">
-                            <span class="chip-icon">🌲</span>
-                            <span class="chip-label">Parks</span>
-                        </div>
-                        <div class="interest-chip" data-interest="coffee">
-                            <span class="chip-icon">☕</span>
-                            <span class="chip-label">Coffee Shops</span>
-                        </div>
-                        <div class="interest-chip" data-interest="art">
-                            <span class="chip-icon">🎨</span>
-                            <span class="chip-label">Street Art</span>
-                        </div>
-                        <div class="interest-chip" data-interest="historic">
-                            <span class="chip-icon">🏛️</span>
-                            <span class="chip-label">Historic Sites</span>
-                        </div>
-                        <div class="interest-chip" data-interest="food">
-                            <span class="chip-icon">🍕</span>
-                            <span class="chip-label">Food Spots</span>
-                        </div>
-                        <div class="interest-chip" data-interest="mountains">
-                            <span class="chip-icon">⛰️</span>
-                            <span class="chip-label">Mountains</span>
-                        </div>
-                        <div class="interest-chip" data-interest="nightlife">
-                            <span class="chip-icon">🍸</span>
-                            <span class="chip-label">Nightlife</span>
-                        </div>
-                    </div>
-
-                    <div class="route-builder-actions">
-                        <button class="continue-btn" id="routeBuilderContinue">Continue to Vibes</button>
-                        <button class="skip-btn" id="routeBuilderSkip">Skip — Pick a vibe instead</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Vibe Selection Screen -->
-            <section class="desktop-screen" id="vibeScreen">
-                <div class="desktop-header">
-                    <div class="vibe-header-text">
-                        <h2>How do you want to <span>drive</span>?</h2>
-                        <p>Pick your vibe and we'll find the perfect route</p>
-                    </div>
-                </div>
-
-                <div class="desktop-content">
-                    <div class="selected-destination-pill">
-                        <span class="dest-pill-icon">📍</span>
-                        <span class="dest-pill-text" id="selectedDestText">Golden Gate Bridge</span>
-                    </div>
-
-                    <!-- Selected interests display -->
-                    <div class="selected-interests" id="selectedInterestsDisplay" style="display: none;">
-                        <span class="interests-label">Looking for:</span>
-                        <div class="interests-list" id="selectedInterestsList"></div>
-                    </div>
-
-                    <div class="vibe-grid desktop-vibe-grid">
-                        <div class="vibe-card-phone" data-vibe="fastest" style="--vibe-color: #ff9f1c">
-                            <div class="vibe-card-icon">⚡</div>
-                            <div class="vibe-card-name">Fastest</div>
-                            <div class="vibe-card-desc">Direct • Quick • Highway</div>
-                        </div>
-                        <div class="vibe-card-phone selected" data-vibe="chill" style="--vibe-color: #00f5d4">
-                            <div class="vibe-card-icon">🌊</div>
-                            <div class="vibe-card-name">Easy & Chill</div>
-                            <div class="vibe-card-desc">Calm • Simple • Relaxed</div>
-                            <!-- Customization options for Chill -->
-                            <div class="vibe-customize" data-for="chill">
-                                <div class="customize-chip selected" data-option="wide-roads">↔️ Wide Roads</div>
-                                <div class="customize-chip" data-option="low-traffic">🚗 Low Traffic</div>
-                                <div class="customize-chip" data-option="quiet">🤫 Quiet Areas</div>
-                            </div>
-                        </div>
-                        <div class="vibe-card-phone" data-vibe="scenic" style="--vibe-color: #06d6a0">
-                            <div class="vibe-card-icon">🏞️</div>
-                            <div class="vibe-card-name">Scenic</div>
-                            <div class="vibe-card-desc">Views • Nature • Lakes</div>
-                            <!-- Customization options for Scenic -->
-                            <div class="vibe-customize" data-for="scenic">
-                                <div class="customize-chip selected" data-option="mountains">⛰️ Mountains</div>
-                                <div class="customize-chip selected" data-option="lakes">🌊 Lakes</div>
-                                <div class="customize-chip" data-option="parks">🌲 Parks</div>
-                                <div class="customize-chip" data-option="beaches">🏖️ Beaches</div>
-                            </div>
-                        </div>
-                        <div class="vibe-card-phone" data-vibe="adventure" style="--vibe-color: #f72585">
-                            <div class="vibe-card-icon">🎢</div>
-                            <div class="vibe-card-name">Adventure</div>
-                            <div class="vibe-card-desc">Twists • Fun • Clubs</div>
-                            <!-- Customization options for Adventure -->
-                            <div class="vibe-customize" data-for="adventure">
-                                <div class="customize-chip selected" data-option="clubs">🍸 Clubs & Bars</div>
-                                <div class="customize-chip" data-option="attractions">🎡 Tourist Spots</div>
-                                <div class="customize-chip" data-option="street-art">🎨 Street Art</div>
-                                <div class="customize-chip" data-option="food">🍕 Food Spots</div>
-                            </div>
-                            <!-- Explorer Mode Toggle -->
-                            <div class="explorer-toggle" data-vibe="adventure">
-                                <div class="explorer-toggle-header">
-                                    <span class="explorer-icon">🧭</span>
-                                    <span class="explorer-label">Explorer Mode</span>
-                                    <div class="toggle-switch" id="explorerToggle">
-                                        <div class="toggle-knob"></div>
-                                    </div>
-                                </div>
-                                <p class="explorer-desc">Hide the route. Just you and the destination.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Map Screen -->
-            <section class="desktop-screen" id="mapScreen">
-                <div class="desktop-map-layout">
-                    <div class="desktop-map-canvas">
-                        <canvas id="phoneMapCanvas"></canvas>
-                    </div>
-
-                    <div class="desktop-map-sidebar">
-                        <div class="map-top-info">
-                            <div class="search-bar desktop-map-search">
-                                <input type="text" class="search-input" placeholder="Where to?"
-                                    value="Golden Gate Bridge" id="mapSearchInput">
-                            </div>
-                            <div class="current-vibe-pill">
-                                <span class="vibe-pill-icon current-vibe-icon">🌊</span>
-                                <span class="vibe-pill-text"><span class="current-vibe-name">Easy & Chill</span>
-                                    route</span>
-                            </div>
-                            <!-- Explorer Mode indicator -->
-                            <div class="explorer-mode-indicator" id="explorerModeIndicator" style="display: none;">
-                                <span class="explorer-indicator-icon">🧭</span>
-                                <span class="explorer-indicator-text">Explorer Mode Active</span>
-                            </div>
-                        </div>
-
-                        <div class="route-preview">
-                            <div class="route-preview-header">
-                                <div class="route-preview-info">
-                                    <h3 class="route-preview-name">Riverside Drive</h3>
-                                    <p class="route-preview-type">Easy & Chill</p>
-                                    <div class="route-perception"
-                                        style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">
-                                    </div>
-                                </div>
-                                <div class="route-preview-eta">
-                                    <div class="route-preview-time">22m</div>
-                                    <div class="route-preview-label route-preview-distance">6.8 mi</div>
-                                </div>
-                            </div>
-                            <div class="route-preview-highlights">
-                                <span class="highlight-item">🛣️ No highways</span>
-                                <span class="highlight-item">↔️ Wide lanes</span>
-                                <span class="highlight-item">🚦 3 lights</span>
-                            </div>
-                            <!-- Show selected customizations -->
-                            <div class="route-customizations" id="routeCustomizations" style="display: none;">
-                                <span class="customizations-label">Your picks:</span>
-                                <div class="customizations-list" id="customizationsList"></div>
-                            </div>
-                        </div>
-                        <button class="start-btn">Let's Go!</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Navigation Screen -->
-            <section class="desktop-screen" id="navScreen">
-                <div class="desktop-nav-layout">
-                    <div class="desktop-nav-canvas">
-                        <canvas id="navMapCanvas"></canvas>
-                    </div>
-
-                    <div class="desktop-nav-sidebar">
-                        <div class="nav-direction">
-                            <div class="nav-arrow">↗</div>
-                            <div class="nav-text">
-                                <h3>Continue on Riverside Dr</h3>
-                                <p>Smooth road ahead • 1.2 miles</p>
-                            </div>
-                        </div>
-                        <div class="nav-progress">
-                            <div class="nav-progress-bar"></div>
-                        </div>
-
-                        <div class="nav-stats">
-                            <div class="nav-stat">
-                                <div class="nav-stat-value">16m</div>
-                                <div class="nav-stat-label">Left</div>
-                            </div>
-                            <div class="nav-stat">
-                                <div class="nav-stat-value">4.2mi</div>
-                                <div class="nav-stat-label">To Go</div>
-                            </div>
-                            <div class="nav-stat">
-                                <div class="nav-stat-value">9:57</div>
-                                <div class="nav-stat-label">Arrive</div>
-                            </div>
-                        </div>
-
-                        <div class="emotional-monitor">
-                            <div class="emotion-wave">
-                                <div class="wave-bar"></div>
-                                <div class="wave-bar"></div>
-                                <div class="wave-bar"></div>
-                                <div class="wave-bar"></div>
-                                <div class="wave-bar"></div>
-                            </div>
-                            <div class="emotion-text">
-                                <h4>Smooth sailing 🌊</h4>
-                                <p>No stress zones ahead</p>
-                            </div>
-                        </div>
-
-                        <button class="end-nav-btn" id="endNavBtn">End Navigation</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Preferences Screen -->
-            <section class="desktop-screen" id="preferencesScreen">
-                <div class="desktop-header">
-                    <h2>Your Preferences</h2>
-                </div>
-
-                <div class="desktop-content">
-                    <p class="preferences-intro">Help us understand how you like to move.</p>
-
-                    <div class="preferences-grid">
-                        <div class="preference-card">
-                            <h4>When waiting for something, do you prefer to...</h4>
-                            <div class="preference-options">
-                                <div class="preference-option" data-pref="wait-walk" data-value="walk">
-                                    <span class="pref-icon">🚶</span>
-                                    <span class="pref-label">Walk around</span>
-                                </div>
-                                <div class="preference-option" data-pref="wait-walk" data-value="wait">
-                                    <span class="pref-icon">🧘</span>
-                                    <span class="pref-label">Stay in one place</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="preference-card">
-                            <h4>How do frequent stops make you feel?</h4>
-                            <div class="preference-options">
-                                <div class="preference-option" data-pref="stops" data-value="frustrating">
-                                    <span class="pref-icon">😤</span>
-                                    <span class="pref-label">Frustrating</span>
-                                </div>
-                                <div class="preference-option" data-pref="stops" data-value="fine">
-                                    <span class="pref-icon">😊</span>
-                                    <span class="pref-label">Doesn't bother me</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="preference-card">
-                            <h4>Do you prefer routes with more things to see?</h4>
-                            <div class="preference-options">
-                                <div class="preference-option" data-pref="visual" data-value="more">
-                                    <span class="pref-icon">🌆</span>
-                                    <span class="pref-label">More visual stimuli</span>
-                                </div>
-                                <div class="preference-option" data-pref="visual" data-value="less">
-                                    <span class="pref-icon">🛤️</span>
-                                    <span class="pref-label">Less is more</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="save-preferences-btn" id="savePreferencesBtn">Save Preferences</button>
-                </div>
-            </section>
-        </main>
-
-        <!-- Bottom Navigation - Sticky -->
-        <div class="bottom-nav desktop-bottom-nav">
-            <div class="nav-item active" data-screen="home">
-                <div class="nav-item-icon">🏠</div>
-                <div class="nav-item-label">Home</div>
-            </div>
-            <div class="nav-item" data-screen="destination">
-                <div class="nav-item-icon">📍</div>
-                <div class="nav-item-label">Destination</div>
-            </div>
-            <div class="nav-item" data-screen="vibe">
-                <div class="nav-item-icon">🎯</div>
-                <div class="nav-item-label">Route</div>
-            </div>
-            <div class="nav-item" data-screen="map">
-                <div class="nav-item-icon">🗺️</div>
-                <div class="nav-item-label">Map</div>
-            </div>
-            <div class="nav-item" data-screen="preferences">
-                <div class="nav-item-icon">🎚️</div>
-                <div class="nav-item-label">Preferences</div>
+        <div class="iphone-frame">
+            <div class="power-button"></div>
+            <div class="iphone-screen">
+                <div class="notch"></div>
+                <iframe src="index.html" title="FlowLayer App"></iframe>
+                <div class="home-indicator"></div>
             </div>
         </div>
     </div>
-
-    <script src="app.js"></script>
-    <script src="desktop.js"></script>
 </body>
 
 </html>
