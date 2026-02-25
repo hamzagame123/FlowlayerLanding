@@ -9,57 +9,67 @@ class PersonalizationEngine {
         this.profile = null;
         this.activeDictationTarget = null;
         this.isDictating = false;
+        this.handsFreeMode = false;
+        this.lastTranscript = '';
         this.recognition = null;
         this.voiceSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
 
         this.questions = [
             {
                 id: 'drive_intention',
-                text: 'What kind of <span>inner state</span> are you hoping this drive creates?',
-                helper: 'Share what you want to shift from and where you want to arrive emotionally.',
-                placeholder: 'Example: I want to release mental noise after work and return to a calmer, clearer state...'
+                text: 'What are you carrying into this drive, and what do you want to leave behind?',
+                helper: 'Give this drive a purpose.',
+                placeholder: 'Example: I am carrying stress and mental clutter. I want to arrive calmer and clear-headed.',
+                suggestions: ['Reset after work', 'Clear my mind', 'Gentle decompression', 'Feel alive again']
             },
             {
-                id: 'road_relationship',
-                text: 'When a route feels <span>right</span>, what does that experience feel like in your body?',
-                helper: 'Describe pace, tension, breathing, and how your attention moves.',
-                placeholder: 'Example: Smooth rhythm, fewer sudden decisions, no aggressive merges...'
+                id: 'pace_preference',
+                text: 'What pace feels right for you today?',
+                helper: 'Not just speed - describe emotional rhythm.',
+                placeholder: 'Example: Slow start, steady middle, and no chaotic moments.',
+                suggestions: ['Slow and reflective', 'Steady and smooth', 'Energetic and fast', 'Mix of calm and intensity']
             },
             {
                 id: 'surrounding_energy',
-                text: 'What kind of <span>surroundings</span> energize you or settle you during a drive?',
-                helper: 'Think in images: water, skyline, neighborhoods, trees, open roads, lights.',
-                placeholder: 'Example: I feel best near water and wide horizons, less boxed in by dense traffic...'
+                text: 'What surroundings change your mood in a good way?',
+                helper: 'Think visually: light, water, skyline, trees, neighborhoods.',
+                placeholder: 'Example: Water, sunset light, and open roads make me breathe easier.',
+                suggestions: ['Ocean or water', 'Trees and forest', 'City lights', 'Mountain elevation']
             },
             {
                 id: 'route_tolerance',
-                text: 'Which route conditions quickly drain your <span>focus</span>?',
-                helper: 'Mention what you want less of: stop-and-go, tight turns, noise, unpredictability, etc.',
-                placeholder: 'Example: Frequent hard stops and confusing lane changes make me tense...'
+                text: 'Which route conditions pull you out of flow?',
+                helper: 'Tell us what to avoid.',
+                placeholder: 'Example: Stop-and-go traffic and confusing merges make me tense quickly.',
+                suggestions: ['Stop-and-go traffic', 'Too many lane changes', 'Crowded downtown streets', 'Unpredictable turns']
             },
             {
-                id: 'preferred_momentum',
-                text: 'How should the drive’s <span>momentum</span> unfold from start to finish?',
-                helper: 'Do you want gentle build-up, steady flow, scenic detours, or intensity?',
-                placeholder: 'Example: Start easy, then open up into a steady flowing pace...'
+                id: 'detour_preference',
+                text: 'How open are you to meaningful detours if they improve the experience?',
+                helper: 'This helps balance efficiency vs depth.',
+                placeholder: 'Example: I am open to a 10-15 minute detour if it feels beautiful and less stressful.',
+                suggestions: ['No detours today', 'Small scenic detours', 'Open to exploration', 'Prioritize fastest arrival']
             },
             {
                 id: 'time_and_light',
-                text: 'What time, weather, or <span>light quality</span> changes how you feel on the road?',
-                helper: 'Describe your ideal atmosphere.',
-                placeholder: 'Example: Late afternoon with warm light and dry roads feels grounding...'
+                text: 'What kind of light or atmosphere helps you feel grounded?',
+                helper: 'Time of day and weather both matter.',
+                placeholder: 'Example: Golden hour and dry roads feel warm and safe.',
+                suggestions: ['Sunrise', 'Daylight', 'Sunset glow', 'Night drive']
             },
             {
                 id: 'meaningful_arrival',
-                text: 'What does a <span>meaningful arrival</span> feel like to you?',
-                helper: 'Not just where you arrive, but how you want to arrive.',
-                placeholder: 'Example: Arrive mentally reset, less rushed, and more present than when I started...'
+                text: 'When this drive ends, how do you want to feel?',
+                helper: 'Describe your desired arrival state.',
+                placeholder: 'Example: Present, lighter, and emotionally reset.',
+                suggestions: ['Calm', 'Focused', 'Inspired', 'Energized']
             },
             {
                 id: 'route_story',
-                text: 'If this drive were a short story, what tone should it have?',
-                helper: 'Use your own language. We will interpret this into route behavior.',
-                placeholder: 'Example: Quiet beginning, reflective middle, hopeful ending...'
+                text: 'If this drive were a short film, what tone should it have?',
+                helper: 'Give us your narrative direction.',
+                placeholder: 'Example: Quiet opening, cinematic middle, hopeful ending.',
+                suggestions: ['Cinematic and scenic', 'Minimal and calm', 'Playful and adventurous', 'Direct and efficient']
             }
         ];
     }
@@ -88,6 +98,7 @@ class PersonalizationEngine {
                 .join(' ')
                 .trim();
 
+            this.lastTranscript = transcript;
             this.activeDictationTarget.value = transcript;
             this.activeDictationTarget.dispatchEvent(new Event('input', { bubbles: true }));
         };
@@ -126,31 +137,56 @@ class PersonalizationEngine {
         return this.profile && this.profile.completedOnboarding;
     }
 
+    getAnswerState(questionId) {
+        const existing = this.answers[questionId];
+        if (existing && typeof existing === 'object') return existing;
+        if (typeof existing === 'string') return { text: existing, tags: [] };
+        return { text: '', tags: [] };
+    }
+
+    setAnswerState(questionId, nextState) {
+        this.answers[questionId] = {
+            text: (nextState.text || '').trim(),
+            tags: Array.isArray(nextState.tags) ? nextState.tags : []
+        };
+    }
+
     renderQuestion() {
         const container = document.getElementById('questionContainer');
         const question = this.questions[this.currentQuestion];
-        const value = this.answers[question.id] || '';
+        const answerState = this.getAnswerState(question.id);
+        const chips = (question.suggestions || []).map(suggestion => {
+            const selected = answerState.tags.includes(suggestion);
+            return `<button class="suggestion-chip ${selected ? 'selected' : ''}" type="button" data-suggestion="${suggestion}">${suggestion}</button>`;
+        }).join('');
 
         container.innerHTML = `
             <div class="question">
                 <h2 class="question-text">${question.text}</h2>
                 <p class="question-helper">${question.helper}</p>
+                <div class="question-tools">
+                    <span class="handsfree-status ${this.handsFreeMode ? 'active' : ''}" id="handsfreeStatus">${this.handsFreeMode ? 'Hands-free mode on' : 'Hands-free mode off'}</span>
+                    <span class="signal-status" id="signalStatus">Signal: warming up</span>
+                </div>
+                <div class="question-chip-group">${chips}</div>
                 <div class="question-input-wrap">
                     <textarea
                         class="question-input"
                         id="questionInput"
                         data-question="${question.id}"
                         placeholder="${question.placeholder}"
-                    >${value}</textarea>
-                    <button class="question-voice-btn" id="questionVoiceBtn" type="button" title="Speak your answer">🎙️</button>
+                    >${answerState.text}</textarea>
+                    <button class="question-voice-btn ${this.isDictating ? 'listening' : ''}" id="questionVoiceBtn" type="button" title="Tap once for continuous voice answers">🎙️</button>
                 </div>
-                <p class="question-caption">Open-ended answers welcome. Our AI routing engine interprets context, not fixed choices.</p>
+                <div class="signal-meter"><span class="signal-fill" id="signalFill"></span></div>
+                <p class="question-caption">Tap option chips + type or speak. One mic tap enables continuous voice to auto-advance through questions.</p>
             </div>
         `;
 
         this.updateProgress();
         this.updateNavButtons();
         this.attachQuestionListeners();
+        this.updateAnswerSignals(question.id);
     }
 
     attachQuestionListeners() {
@@ -160,7 +196,24 @@ class PersonalizationEngine {
 
         const question = this.questions[this.currentQuestion];
         input.addEventListener('input', () => {
-            this.answers[question.id] = input.value.trim();
+            const state = this.getAnswerState(question.id);
+            state.text = input.value;
+            this.setAnswerState(question.id, state);
+            this.updateAnswerSignals(question.id);
+        });
+
+        document.querySelectorAll('.suggestion-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const state = this.getAnswerState(question.id);
+                const suggestion = chip.dataset.suggestion;
+                const isSelected = state.tags.includes(suggestion);
+                state.tags = isSelected
+                    ? state.tags.filter(item => item !== suggestion)
+                    : [...state.tags, suggestion];
+                this.setAnswerState(question.id, state);
+                chip.classList.toggle('selected', !isSelected);
+                this.updateAnswerSignals(question.id);
+            });
         });
 
         if (voiceBtn) {
@@ -172,24 +225,48 @@ class PersonalizationEngine {
 
             voiceBtn.addEventListener('click', () => {
                 if (this.isDictating) {
+                    this.handsFreeMode = false;
                     this.recognition.stop();
                     return;
                 }
 
+                this.handsFreeMode = true;
                 this.activeDictationTarget = input;
                 this.isDictating = true;
+                this.lastTranscript = '';
                 voiceBtn.classList.add('listening');
                 this.recognition.start();
+                this.updateHandsfreeStatus();
             });
+        }
+
+        if (this.handsFreeMode && this.voiceSupported && this.recognition) {
+            this.activeDictationTarget = input;
+            this.isDictating = true;
+            this.lastTranscript = '';
+            voiceBtn.classList.add('listening');
+            setTimeout(() => {
+                if (this.handsFreeMode) this.recognition.start();
+            }, 500);
         }
     }
 
     stopDictationState() {
+        const shouldContinue = this.handsFreeMode;
         this.isDictating = false;
         this.activeDictationTarget = null;
         const voiceBtn = document.getElementById('questionVoiceBtn');
         if (voiceBtn) {
             voiceBtn.classList.remove('listening');
+        }
+
+        // Hands-free flow: stop speaking -> auto-next -> mic keeps going.
+        if (shouldContinue) {
+            const moved = this.nextQuestion(true);
+            if (!moved) {
+                this.handsFreeMode = false;
+            }
+            this.updateHandsfreeStatus();
         }
     }
 
@@ -217,7 +294,7 @@ class PersonalizationEngine {
         const nextBtn = document.getElementById('nextBtn');
 
         prevBtn.addEventListener('click', () => this.prevQuestion());
-        nextBtn.addEventListener('click', () => this.nextQuestion());
+        nextBtn.addEventListener('click', () => this.nextQuestion(false));
     }
 
     prevQuestion() {
@@ -226,11 +303,13 @@ class PersonalizationEngine {
         this.renderQuestion();
     }
 
-    nextQuestion() {
+    nextQuestion(fromVoice = false) {
         const question = this.questions[this.currentQuestion];
-        const answer = (this.answers[question.id] || '').trim();
+        const state = this.getAnswerState(question.id);
+        const answer = (state.text || '').trim();
+        const richness = answer.split(/\s+/).filter(Boolean).length + state.tags.length;
 
-        if (answer.length < 8 || answer.split(/\s+/).length < 3) {
+        if (richness < 3) {
             const input = document.getElementById('questionInput');
             if (input) {
                 input.style.animation = 'shake 0.3s ease';
@@ -239,16 +318,17 @@ class PersonalizationEngine {
                 }, 300);
                 input.focus();
             }
-            return;
+            return false;
         }
 
         if (this.currentQuestion < this.questions.length - 1) {
             this.currentQuestion += 1;
             this.renderQuestion();
-            return;
+            return true;
         }
 
         this.completeOnboarding();
+        return false;
     }
 
     completeOnboarding() {
@@ -259,7 +339,7 @@ class PersonalizationEngine {
     }
 
     inferRoutePreference() {
-        const scenicText = (this.answers.surrounding_energy || '').toLowerCase();
+        const scenicText = this.getCombinedAnswerText('surrounding_energy');
         if (/(ocean|coast|beach|water|bay|sea)/.test(scenicText)) return 'coastal';
         if (/(mountain|elevation|hill|peak|canyon)/.test(scenicText)) return 'mountain';
         if (/(forest|trees|green|woods|trail|nature)/.test(scenicText)) return 'forest';
@@ -278,7 +358,7 @@ class PersonalizationEngine {
     }
 
     getPreferredVibe() {
-        const combined = Object.values(this.answers).join(' ').toLowerCase();
+        const combined = this.getAllAnswerText();
         if (/(rush|adrenaline|thrill|intense|fast|excited)/.test(combined)) return 'adventure';
         if (/(calm|soft|gentle|relax|breathe|quiet|reset|peace)/.test(combined)) return 'chill';
         if (/(scenic|nature|views|sunset|water|mountain|forest|explore)/.test(combined)) return 'scenic';
@@ -286,11 +366,46 @@ class PersonalizationEngine {
     }
 
     getTimeOfDaySetting() {
-        const text = (this.answers.time_and_light || '').toLowerCase();
+        const text = this.getCombinedAnswerText('time_and_light');
         if (/(sunrise|morning|dawn|early)/.test(text)) return 'sunrise';
         if (/(night|dark|late|midnight)/.test(text)) return 'night';
         if (/(day|afternoon|noon|bright)/.test(text)) return 'day';
         return 'sunset';
+    }
+
+    getCombinedAnswerText(questionId) {
+        const state = this.getAnswerState(questionId);
+        return `${state.text} ${state.tags.join(' ')}`.toLowerCase();
+    }
+
+    getAllAnswerText() {
+        return Object.keys(this.answers)
+            .map(questionId => this.getCombinedAnswerText(questionId))
+            .join(' ')
+            .toLowerCase();
+    }
+
+    updateHandsfreeStatus() {
+        const statusEl = document.getElementById('handsfreeStatus');
+        if (!statusEl) return;
+        statusEl.textContent = this.handsFreeMode ? 'Hands-free mode on' : 'Hands-free mode off';
+        statusEl.classList.toggle('active', this.handsFreeMode);
+    }
+
+    updateAnswerSignals(questionId) {
+        const state = this.getAnswerState(questionId);
+        const words = (state.text || '').trim().split(/\s+/).filter(Boolean).length;
+        const signal = Math.min(100, words * 6 + state.tags.length * 14);
+
+        const fill = document.getElementById('signalFill');
+        const label = document.getElementById('signalStatus');
+        if (fill) fill.style.width = `${signal}%`;
+
+        if (!label) return;
+        if (signal < 25) label.textContent = 'Signal: warming up';
+        else if (signal < 55) label.textContent = 'Signal: enough context';
+        else if (signal < 80) label.textContent = 'Signal: strong personalization';
+        else label.textContent = 'Signal: rich emotional profile';
     }
 }
 
