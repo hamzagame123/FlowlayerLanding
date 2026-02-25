@@ -1492,6 +1492,48 @@ button {
     color: var(--accent-primary);
 }
 
+.duration-btns {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.duration-btn {
+    padding: 11px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    font-family: var(--font-display);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.duration-btn:hover {
+    border-color: rgba(0, 245, 212, 0.45);
+    color: var(--text-primary);
+}
+
+.duration-btn.selected {
+    border-color: var(--accent-primary);
+    background: rgba(0, 245, 212, 0.14);
+    color: var(--accent-primary);
+}
+
+.playlist-save-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.playlist-save-toggle input {
+    accent-color: var(--accent-primary);
+    width: 16px;
+    height: 16px;
+}
+
 .feedback-notes {
     width: 100%;
     min-height: 80px;

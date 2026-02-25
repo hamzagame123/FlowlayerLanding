@@ -166,7 +166,6 @@ class PersonalizationEngine {
                 <p class="question-helper">${question.helper}</p>
                 <div class="question-tools">
                     <span class="handsfree-status ${this.handsFreeMode ? 'active' : ''}" id="handsfreeStatus">${this.handsFreeMode ? 'Hands-free mode on' : 'Hands-free mode off'}</span>
-                    <span class="signal-status" id="signalStatus">Signal: warming up</span>
                 </div>
                 <div class="question-chip-group">${chips}</div>
                 <div class="question-input-wrap">

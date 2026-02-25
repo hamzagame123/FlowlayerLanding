@@ -313,10 +313,27 @@
                         <button class="choice-btn" data-value="no">No</button>
                     </div>
                 </div>
+
+                <div class="feedback-question">
+                    <label>Set your preferred drive duration for next time</label>
+                    <div class="duration-btns" data-question="preferred_duration">
+                        <button class="duration-btn" type="button" data-minutes="10">10 min</button>
+                        <button class="duration-btn" type="button" data-minutes="20">20 min</button>
+                        <button class="duration-btn" type="button" data-minutes="30">30 min</button>
+                        <button class="duration-btn" type="button" data-minutes="45">45 min</button>
+                    </div>
+                </div>
                 
                 <div class="feedback-question">
                     <label>Any notes about this drive?</label>
                     <textarea class="feedback-notes" id="feedbackNotes" placeholder="The sunset views were amazing..."></textarea>
+                </div>
+
+                <div class="feedback-question">
+                    <label class="playlist-save-toggle">
+                        <input type="checkbox" id="saveToPlaylistAfterDrive" checked>
+                        <span>Save this drive to playlist</span>
+                    </label>
                 </div>
             </div>
             

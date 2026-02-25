@@ -15,6 +15,10 @@ class FlowLayerApp {
         this.storyTimeouts = [];
         this.destinationRecognition = null;
         this.destinationListening = false;
+        this.driveDurationInterval = null;
+        this.driveSettings = {
+            preferredDurationMinutes: 20
+        };
         
         this.initStoryExperience();
     }
@@ -108,6 +112,7 @@ class FlowLayerApp {
     init() {
         // Load playlist from storage
         this.loadPlaylist();
+        this.loadDriveSettings();
         
         // Check if user has completed onboarding
         if (this.personalization.hasCompletedOnboarding()) {
@@ -315,6 +320,18 @@ class FlowLayerApp {
                 this.feedback[question] = btn.dataset.value;
             });
         });
+
+        // Preferred duration buttons
+        document.querySelectorAll('.duration-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const group = btn.closest('.duration-btns');
+                if (!group) return;
+
+                group.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                this.feedback.preferredDurationMinutes = parseInt(btn.dataset.minutes, 10);
+            });
+        });
         
         // Skip feedback
         const skipBtn = document.getElementById('skipFeedback');
@@ -342,6 +359,8 @@ class FlowLayerApp {
             route: this.currentRoute,
             vibe: this.currentVibe
         };
+
+        this.startDriveDurationWatcher();
         
         this.simulator.startDrive();
         
@@ -350,8 +369,9 @@ class FlowLayerApp {
         document.getElementById('endDriveBtn').classList.remove('hidden');
     }
     
-    endDrive() {
+    endDrive(autoEnded = false) {
         if (!this.simulator || !this.currentDrive) return;
+        this.stopDriveDurationWatcher();
         
         // Get drive data
         const driveData = this.simulator.getDriveData();
@@ -364,6 +384,10 @@ class FlowLayerApp {
         // Update UI
         document.getElementById('endDriveBtn').classList.add('hidden');
         document.getElementById('startDriveBtn').classList.remove('hidden');
+
+        if (autoEnded) {
+            this.showToast('Drive duration reached. Wrapping up your ride.');
+        }
         
         // Show feedback modal
         setTimeout(() => this.showFeedback(), 500);
@@ -498,8 +522,53 @@ class FlowLayerApp {
     savePlaylist() {
         localStorage.setItem('flowlayer_playlist', JSON.stringify(this.playlist));
     }
+
+    loadDriveSettings() {
+        const saved = localStorage.getItem('flowlayer_drive_settings');
+        if (!saved) return;
+
+        try {
+            const parsed = JSON.parse(saved);
+            const minutes = Number(parsed.preferredDurationMinutes);
+            if (Number.isFinite(minutes) && minutes > 0) {
+                this.driveSettings.preferredDurationMinutes = minutes;
+            }
+        } catch (e) {
+            // Keep defaults if parsing fails.
+        }
+    }
+
+    saveDriveSettings() {
+        localStorage.setItem('flowlayer_drive_settings', JSON.stringify(this.driveSettings));
+    }
+
+    startDriveDurationWatcher() {
+        this.stopDriveDurationWatcher();
+        const minutes = Number(this.driveSettings.preferredDurationMinutes);
+        if (!Number.isFinite(minutes) || minutes <= 0) return;
+
+        const targetMs = minutes * 60 * 1000;
+        this.driveDurationInterval = setInterval(() => {
+            if (!this.currentDrive || !this.simulator || !this.simulator.isDriving) return;
+            const elapsedMs = Date.now() - this.currentDrive.startTime;
+            if (elapsedMs >= targetMs) {
+                this.endDrive(true);
+            }
+        }, 1000);
+    }
+
+    stopDriveDurationWatcher() {
+        if (!this.driveDurationInterval) return;
+        clearInterval(this.driveDurationInterval);
+        this.driveDurationInterval = null;
+    }
     
     saveCurrentRide() {
+        if (this.currentDrive && this.currentDrive.savedToPlaylist) {
+            this.showToast('This drive is already in your playlist.');
+            return;
+        }
+
         if (!this.currentDrive) {
             // Create a placeholder if no active drive
             const driveData = this.simulator ? this.simulator.getDriveData() : {};
@@ -516,12 +585,14 @@ class FlowLayerApp {
             route: this.currentRoute,
             vibe: this.currentVibe,
             distance: this.currentDrive.distance || 0,
+            duration: this.currentDrive.duration || 0,
             date: new Date().toLocaleDateString(),
             name: this.getRouteName(this.currentRoute)
         };
         
         this.playlist.unshift(ride);
         this.savePlaylist();
+        this.currentDrive.savedToPlaylist = true;
         
         // Show confirmation
         this.showToast('Ride saved to playlist!');
@@ -595,7 +666,22 @@ class FlowLayerApp {
         document.querySelectorAll('.rating-btn, .choice-btn').forEach(btn => {
             btn.classList.remove('selected');
         });
+        document.querySelectorAll('.duration-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
         document.getElementById('feedbackNotes').value = '';
+
+        const saveToPlaylist = document.getElementById('saveToPlaylistAfterDrive');
+        if (saveToPlaylist) {
+            saveToPlaylist.checked = this.currentDrive ? !this.currentDrive.savedToPlaylist : true;
+        }
+
+        const preferred = Number(this.driveSettings.preferredDurationMinutes);
+        const defaultDurationBtn = document.querySelector(`.duration-btn[data-minutes="${preferred}"]`);
+        if (defaultDurationBtn) {
+            defaultDurationBtn.classList.add('selected');
+            this.feedback.preferredDurationMinutes = preferred;
+        }
         
         const modal = document.getElementById('feedbackModal');
         modal.classList.add('active');
@@ -612,6 +698,24 @@ class FlowLayerApp {
         const notes = document.getElementById('feedbackNotes').value;
         if (notes) {
             this.feedback.notes = notes;
+        }
+
+        const selectedDurationBtn = document.querySelector('.duration-btn.selected');
+        if (selectedDurationBtn) {
+            const minutes = parseInt(selectedDurationBtn.dataset.minutes, 10);
+            if (Number.isFinite(minutes) && minutes > 0) {
+                this.driveSettings.preferredDurationMinutes = minutes;
+                this.feedback.preferredDurationMinutes = minutes;
+                this.saveDriveSettings();
+            }
+        }
+
+        const saveToPlaylist = document.getElementById('saveToPlaylistAfterDrive');
+        if (saveToPlaylist && saveToPlaylist.checked) {
+            this.saveCurrentRide();
+            this.feedback.savedToPlaylist = true;
+        } else {
+            this.feedback.savedToPlaylist = false;
         }
         
         // Save feedback to personalization
