@@ -446,6 +446,72 @@ button {
     color: var(--accent-primary);
 }
 
+.question-helper {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+}
+
+.question-input-wrap {
+    position: relative;
+}
+
+.question-input {
+    width: 100%;
+    min-height: 150px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 16px 54px 16px 16px;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: 15px;
+    line-height: 1.55;
+    resize: vertical;
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.question-input:focus {
+    border-color: rgba(0, 245, 212, 0.6);
+    box-shadow: 0 0 0 3px rgba(0, 245, 212, 0.12);
+}
+
+.question-input::placeholder {
+    color: rgba(255, 255, 255, 0.38);
+}
+
+.question-voice-btn {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.question-voice-btn:hover {
+    border-color: rgba(0, 245, 212, 0.5);
+    color: var(--accent-primary);
+}
+
+.question-voice-btn.listening {
+    border-color: rgba(247, 37, 133, 0.65);
+    color: #ff8fbd;
+    box-shadow: 0 0 0 4px rgba(247, 37, 133, 0.12);
+}
+
+.question-caption {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
 /* Answer Options */
 .answer-options {
     display: flex;
@@ -637,6 +703,65 @@ button {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.destination-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 420px;
+}
+
+.destination-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(18, 18, 26, 0.88);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    backdrop-filter: blur(12px);
+}
+
+.destination-icon {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.destination-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-display);
+    font-size: 14px;
+    outline: none;
+}
+
+.destination-input::placeholder {
+    color: var(--text-muted);
+}
+
+.destination-voice-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.destination-voice-btn:hover {
+    border-color: rgba(0, 245, 212, 0.5);
+    color: var(--accent-primary);
+}
+
+.destination-voice-btn.listening {
+    border-color: rgba(247, 37, 133, 0.65);
+    color: #ff8fbd;
+    box-shadow: 0 0 0 4px rgba(247, 37, 133, 0.12);
 }
 
 .current-route {
@@ -1493,5 +1618,15 @@ button {
     .story-start-btn {
         transition: none;
         animation: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .destination-panel {
+        min-width: 300px;
+    }
+
+    .destination-input-wrap {
+        padding: 8px 10px;
     }
 }

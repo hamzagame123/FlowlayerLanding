@@ -8,10 +8,13 @@ class FlowLayerApp {
         this.voice = null;
         this.currentVibe = 'scenic';
         this.currentRoute = 'coastal';
+        this.selectedDestination = 'Golden Gate Bridge';
         this.playlist = [];
         this.currentDrive = null;
         this.feedback = {};
         this.storyTimeouts = [];
+        this.destinationRecognition = null;
+        this.destinationListening = false;
         
         this.initStoryExperience();
     }
@@ -161,16 +164,14 @@ class FlowLayerApp {
             const vibe = this.personalization.getPreferredVibe();
             this.setVibe(vibe);
             
-            // Set environment based on scenic preference
-            const scenicPref = this.personalization.answers.scenic_preference;
-            if (scenicPref === 'ocean') this.setRoute('coastal');
-            else if (scenicPref === 'mountains') this.setRoute('mountain');
-            else if (scenicPref === 'forest') this.setRoute('forest');
+            // Set environment based on interpreted preferences
+            this.setRoute(this.personalization.inferRoutePreference());
         }
         
         // Update UI
         this.updateVibeUI();
         this.updateRouteUI();
+        this.setupDestinationInput();
     }
     
     setupVoiceCallbacks() {
@@ -267,6 +268,7 @@ class FlowLayerApp {
         
         // Feedback modal buttons
         this.setupFeedbackListeners();
+        this.setupDestinationInput();
         
         // Click outside modal to close
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -407,6 +409,73 @@ class FlowLayerApp {
         if (routeName) {
             routeName.textContent = routeNames[this.currentRoute] || 'Custom Route';
         }
+    }
+
+    setupDestinationInput() {
+        const destinationInput = document.getElementById('destinationInputSim');
+        const destinationVoiceBtn = document.getElementById('destinationVoiceBtn');
+        if (!destinationInput || destinationInput.dataset.bound === 'true') return;
+
+        destinationInput.value = this.selectedDestination;
+        destinationInput.dataset.bound = 'true';
+
+        destinationInput.addEventListener('change', () => {
+            this.selectedDestination = destinationInput.value.trim() || 'Untitled Destination';
+        });
+
+        destinationInput.addEventListener('keypress', (e) => {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            destinationInput.blur();
+            this.selectedDestination = destinationInput.value.trim() || 'Untitled Destination';
+            this.showToast(`Destination set: ${this.selectedDestination}`);
+        });
+
+        if (!destinationVoiceBtn) return;
+        this.initDestinationDictation(destinationVoiceBtn, destinationInput);
+    }
+
+    initDestinationDictation(buttonEl, inputEl) {
+        if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+            buttonEl.disabled = true;
+            buttonEl.title = 'Voice input not supported in this browser';
+            return;
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        this.destinationRecognition = new SpeechRecognition();
+        this.destinationRecognition.continuous = false;
+        this.destinationRecognition.interimResults = true;
+        this.destinationRecognition.lang = 'en-US';
+
+        this.destinationRecognition.onresult = (event) => {
+            const transcript = [...event.results]
+                .map(result => result[0].transcript)
+                .join(' ')
+                .trim();
+
+            inputEl.value = transcript;
+            this.selectedDestination = transcript || this.selectedDestination;
+        };
+
+        this.destinationRecognition.onerror = () => this.stopDestinationDictation(buttonEl);
+        this.destinationRecognition.onend = () => this.stopDestinationDictation(buttonEl);
+
+        buttonEl.addEventListener('click', () => {
+            if (this.destinationListening) {
+                this.destinationRecognition.stop();
+                return;
+            }
+
+            this.destinationListening = true;
+            buttonEl.classList.add('listening');
+            this.destinationRecognition.start();
+        });
+    }
+
+    stopDestinationDictation(buttonEl) {
+        this.destinationListening = false;
+        if (buttonEl) buttonEl.classList.remove('listening');
     }
     
     // Playlist Management
