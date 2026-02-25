@@ -11,7 +11,66 @@ class FlowLayerApp {
         this.playlist = [];
         this.currentDrive = null;
         this.feedback = {};
+        this.storyTimeouts = [];
         
+        this.initStoryExperience();
+    }
+
+    initStoryExperience() {
+        const storyScreen = document.getElementById('storyIntro');
+        const storyButton = document.getElementById('storyStartBtn');
+        const storyLines = [...document.querySelectorAll('.story-line')];
+
+        if (!storyScreen || !storyButton || storyLines.length === 0) {
+            this.init();
+            return;
+        }
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+            storyLines.forEach(line => line.classList.add('visible'));
+            storyButton.classList.add('ready');
+            storyButton.addEventListener('click', () => this.finishStoryExperience());
+            return;
+        }
+
+        let timelineDelay = 700;
+        storyLines.forEach(line => {
+            this.storyTimeouts.push(setTimeout(() => {
+                line.classList.add('visible');
+                line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, timelineDelay));
+
+            const linePause = Number(line.dataset.pause || 1800);
+            timelineDelay += linePause;
+        });
+
+        this.storyTimeouts.push(setTimeout(() => {
+            storyButton.classList.add('ready');
+        }, timelineDelay + 900));
+
+        this.storyTimeouts.push(setTimeout(() => {
+            this.finishStoryExperience();
+        }, timelineDelay + 5200));
+
+        storyButton.addEventListener('click', () => this.finishStoryExperience());
+    }
+
+    finishStoryExperience() {
+        if (this.storyFinished) return;
+        this.storyFinished = true;
+
+        this.storyTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+        this.storyTimeouts = [];
+
+        const storyScreen = document.getElementById('storyIntro');
+        if (storyScreen) {
+            storyScreen.classList.remove('active');
+            this.storyTimeouts.push(setTimeout(() => {
+                storyScreen.style.display = 'none';
+            }, 520));
+        }
+
         this.init();
     }
     

@@ -360,6 +360,18 @@ body:hover .cursor-glow {
     border-color: var(--border-subtle);
 }
 
+.btn-simulator {
+    background: rgba(6, 214, 160, 0.12);
+    border: 1px solid rgba(6, 214, 160, 0.45);
+    color: #8bffe0;
+}
+
+.btn-simulator:hover {
+    background: rgba(6, 214, 160, 0.2);
+    border-color: rgba(6, 214, 160, 0.7);
+    transform: translateY(-3px);
+}
+
 /* Hero Visual */
 .hero-visual {
     position: absolute;

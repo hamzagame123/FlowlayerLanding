@@ -65,6 +65,105 @@ button {
     visibility: visible;
 }
 
+/* Story intro */
+#storyIntro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 28px;
+    background:
+        linear-gradient(160deg, rgba(8, 8, 12, 0.94) 0%, rgba(8, 8, 12, 0.98) 100%),
+        radial-gradient(ellipse at 20% 0%, rgba(0, 245, 212, 0.08) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 100%, rgba(155, 93, 229, 0.12) 0%, transparent 55%);
+}
+
+#storyIntro::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.16;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.18) 1px, transparent 0);
+    background-size: 3px 3px;
+}
+
+.story-intro-container {
+    position: relative;
+    width: min(100%, 820px);
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.story-intro-container::-webkit-scrollbar {
+    display: none;
+}
+
+.story-kicker {
+    font-size: 11px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 24px;
+}
+
+.story-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.story-line {
+    font-size: clamp(20px, 2.2vw, 30px);
+    line-height: 1.58;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.28);
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(5px);
+    transition: opacity 1.25s ease, transform 1.25s ease, filter 1.25s ease, color 1.25s ease;
+}
+
+.story-line.visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+    color: rgba(255, 255, 255, 0.94);
+}
+
+.story-divider {
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 2px;
+}
+
+.story-start-btn {
+    margin-top: 34px;
+    padding: 14px 24px;
+    border: 1px solid rgba(0, 245, 212, 0.4);
+    border-radius: 999px;
+    background: rgba(0, 245, 212, 0.08);
+    color: rgba(255, 255, 255, 0.95);
+    font-family: var(--font-display);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.8s ease, transform 0.8s ease, background var(--transition), border-color var(--transition);
+}
+
+.story-start-btn.ready {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.story-start-btn:hover {
+    background: rgba(0, 245, 212, 0.16);
+    border-color: rgba(0, 245, 212, 0.62);
+}
+
 /* =========================
    ONBOARDING SCREEN
 ========================= */
