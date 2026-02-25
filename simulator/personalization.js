@@ -213,6 +213,11 @@ class PersonalizationEngine {
                 this.setAnswerState(question.id, state);
                 chip.classList.toggle('selected', !isSelected);
                 this.updateAnswerSignals(question.id);
+
+                // Quick-select flow: selecting a chip advances immediately.
+                if (!isSelected) {
+                    this.nextQuestion(false);
+                }
             });
         });
 
@@ -307,9 +312,11 @@ class PersonalizationEngine {
         const question = this.questions[this.currentQuestion];
         const state = this.getAnswerState(question.id);
         const answer = (state.text || '').trim();
-        const richness = answer.split(/\s+/).filter(Boolean).length + state.tags.length;
+        const wordCount = answer.split(/\s+/).filter(Boolean).length;
+        const hasEnoughText = wordCount >= 3;
+        const hasAnyTag = state.tags.length > 0;
 
-        if (richness < 3) {
+        if (!hasEnoughText && !hasAnyTag) {
             const input = document.getElementById('questionInput');
             if (input) {
                 input.style.animation = 'shake 0.3s ease';

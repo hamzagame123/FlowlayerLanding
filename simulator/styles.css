@@ -126,6 +126,38 @@ button {
     text-shadow: 0 0 18px rgba(0, 245, 212, 0.14);
 }
 
+.story-skip-btn {
+    position: absolute;
+    top: 2px;
+    right: 0;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    background: rgba(12, 12, 18, 0.55);
+    color: rgba(255, 255, 255, 0.58);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 11px;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: color var(--transition), border-color var(--transition), background var(--transition), opacity var(--transition);
+    opacity: 0.72;
+}
+
+.story-skip-btn:hover {
+    color: rgba(255, 255, 255, 0.82);
+    border-color: rgba(255, 255, 255, 0.28);
+    background: rgba(14, 14, 22, 0.78);
+    opacity: 0.95;
+}
+
+.story-skip-btn:focus-visible {
+    outline: none;
+    border-color: rgba(0, 245, 212, 0.55);
+    box-shadow: 0 0 0 3px rgba(0, 245, 212, 0.16);
+}
+
 .story-scroll {
     display: flex;
     flex-direction: column;

@@ -22,6 +22,7 @@ class FlowLayerApp {
     initStoryExperience() {
         const storyScreen = document.getElementById('storyIntro');
         const storyButton = document.getElementById('storyStartBtn');
+        const storySkipButton = document.getElementById('storySkipBtn');
         const storyLines = [...document.querySelectorAll('.story-line')];
         const storyContainer = document.querySelector('.story-intro-container');
 
@@ -35,6 +36,8 @@ class FlowLayerApp {
             storyLines.forEach(line => line.classList.add('visible'));
             storyButton.classList.add('ready');
             storyButton.addEventListener('click', () => this.finishStoryExperience());
+            if (storySkipButton) storySkipButton.addEventListener('click', () => this.finishStoryExperience());
+            storyScreen.addEventListener('dblclick', () => this.finishStoryExperience());
             return;
         }
 
@@ -60,6 +63,8 @@ class FlowLayerApp {
         }, timelineDelay + 5200));
 
         storyButton.addEventListener('click', () => this.finishStoryExperience());
+        if (storySkipButton) storySkipButton.addEventListener('click', () => this.finishStoryExperience());
+        storyScreen.addEventListener('dblclick', () => this.finishStoryExperience());
     }
 
     scrollStoryFromMiddle(lineEl, containerEl) {
