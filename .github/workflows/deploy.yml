@@ -35,6 +35,8 @@ jobs:
           cp app.js dist/
           mkdir -p dist/flowlayer
           cp -r flowlayer/* dist/flowlayer/
+          mkdir -p dist/simulator
+          cp -r simulator/* dist/simulator/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
