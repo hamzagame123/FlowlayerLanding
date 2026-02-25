@@ -20,6 +20,7 @@ class FlowLayerApp {
         const storyScreen = document.getElementById('storyIntro');
         const storyButton = document.getElementById('storyStartBtn');
         const storyLines = [...document.querySelectorAll('.story-line')];
+        const storyContainer = document.querySelector('.story-intro-container');
 
         if (!storyScreen || !storyButton || storyLines.length === 0) {
             this.init();
@@ -37,8 +38,10 @@ class FlowLayerApp {
         let timelineDelay = 700;
         storyLines.forEach(line => {
             this.storyTimeouts.push(setTimeout(() => {
+                storyLines.forEach(storyLine => storyLine.classList.remove('current-line'));
                 line.classList.add('visible');
-                line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                line.classList.add('current-line');
+                this.scrollStoryFromMiddle(line, storyContainer);
             }, timelineDelay));
 
             const linePause = Number(line.dataset.pause || 1800);
@@ -54,6 +57,26 @@ class FlowLayerApp {
         }, timelineDelay + 5200));
 
         storyButton.addEventListener('click', () => this.finishStoryExperience());
+    }
+
+    scrollStoryFromMiddle(lineEl, containerEl) {
+        if (!lineEl || !containerEl) return;
+
+        const containerRect = containerEl.getBoundingClientRect();
+        const lineRect = lineEl.getBoundingClientRect();
+        const lineMidpoint = lineRect.top + (lineRect.height / 2);
+        const scrollTrigger = containerRect.top + (containerRect.height * 0.5);
+
+        if (lineMidpoint <= scrollTrigger) return;
+
+        const delta = lineMidpoint - scrollTrigger;
+        const maxScrollTop = containerEl.scrollHeight - containerEl.clientHeight;
+        const nextTop = Math.min(containerEl.scrollTop + delta, maxScrollTop);
+
+        containerEl.scrollTo({
+            top: nextTop,
+            behavior: 'smooth'
+        });
     }
 
     finishStoryExperience() {
