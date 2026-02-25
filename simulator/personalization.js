@@ -165,7 +165,7 @@ class PersonalizationEngine {
                 <h2 class="question-text">${question.text}</h2>
                 <p class="question-helper">${question.helper}</p>
                 <div class="question-tools">
-                    <span class="handsfree-status ${this.handsFreeMode ? 'active' : ''}" id="handsfreeStatus">${this.handsFreeMode ? 'Hands-free mode on' : 'Hands-free mode off'}</span>
+                    <span class="handsfree-status ${this.isDictating ? 'active' : ''}" id="handsfreeStatus">${this.isDictating ? 'Mic listening' : 'Mic off'}</span>
                 </div>
                 <div class="question-chip-group">${chips}</div>
                 <div class="question-input-wrap">
@@ -175,10 +175,10 @@ class PersonalizationEngine {
                         data-question="${question.id}"
                         placeholder="${question.placeholder}"
                     >${answerState.text}</textarea>
-                    <button class="question-voice-btn ${this.isDictating ? 'listening' : ''}" id="questionVoiceBtn" type="button" title="Tap once for continuous voice answers">🎙️</button>
+                    <button class="question-voice-btn ${this.isDictating ? 'listening' : ''}" id="questionVoiceBtn" type="button" title="Tap to dictate one answer">🎙️</button>
                 </div>
                 <div class="signal-meter"><span class="signal-fill" id="signalFill"></span></div>
-                <p class="question-caption">Tap option chips + type or speak. One mic tap enables continuous voice to auto-advance through questions.</p>
+                <p class="question-caption">Tap option chips + type or speak. Mic turns off after each sentence.</p>
             </div>
         `;
 
@@ -229,12 +229,11 @@ class PersonalizationEngine {
 
             voiceBtn.addEventListener('click', () => {
                 if (this.isDictating) {
-                    this.handsFreeMode = false;
                     this.recognition.stop();
                     return;
                 }
 
-                this.handsFreeMode = true;
+                this.handsFreeMode = false;
                 this.activeDictationTarget = input;
                 this.isDictating = true;
                 this.lastTranscript = '';
@@ -243,35 +242,17 @@ class PersonalizationEngine {
                 this.updateHandsfreeStatus();
             });
         }
-
-        if (this.handsFreeMode && this.voiceSupported && this.recognition) {
-            this.activeDictationTarget = input;
-            this.isDictating = true;
-            this.lastTranscript = '';
-            voiceBtn.classList.add('listening');
-            setTimeout(() => {
-                if (this.handsFreeMode) this.recognition.start();
-            }, 500);
-        }
     }
 
     stopDictationState() {
-        const shouldContinue = this.handsFreeMode;
         this.isDictating = false;
+        this.handsFreeMode = false;
         this.activeDictationTarget = null;
         const voiceBtn = document.getElementById('questionVoiceBtn');
         if (voiceBtn) {
             voiceBtn.classList.remove('listening');
         }
-
-        // Hands-free flow: stop speaking -> auto-next -> mic keeps going.
-        if (shouldContinue) {
-            const moved = this.nextQuestion(true);
-            if (!moved) {
-                this.handsFreeMode = false;
-            }
-            this.updateHandsfreeStatus();
-        }
+        this.updateHandsfreeStatus();
     }
 
     updateProgress() {
@@ -394,8 +375,8 @@ class PersonalizationEngine {
     updateHandsfreeStatus() {
         const statusEl = document.getElementById('handsfreeStatus');
         if (!statusEl) return;
-        statusEl.textContent = this.handsFreeMode ? 'Hands-free mode on' : 'Hands-free mode off';
-        statusEl.classList.toggle('active', this.handsFreeMode);
+        statusEl.textContent = this.isDictating ? 'Mic listening' : 'Mic off';
+        statusEl.classList.toggle('active', this.isDictating);
     }
 
     updateAnswerSignals(questionId) {

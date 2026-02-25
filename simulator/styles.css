@@ -162,7 +162,13 @@ button {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    perspective: 900px;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+}
+
+.story-scroll.crawl-active {
+    transform-origin: 50% 100%;
+    animation: storyCrawl 48s linear forwards;
 }
 
 .story-line {
@@ -171,7 +177,7 @@ button {
     font-size: clamp(20px, 2.2vw, 30px);
     line-height: 1.58;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.82);
     opacity: 0;
     transform: translateY(14px) scale(0.992) rotateX(4deg);
     filter: blur(4px);
@@ -198,8 +204,8 @@ button {
     opacity: 1;
     transform: translateY(0) scale(1) rotateX(0deg);
     filter: blur(0);
-    color: rgba(238, 246, 255, 0.96);
-    text-shadow: 0 0 12px rgba(0, 245, 212, 0.08);
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.18);
     animation: storyLineSpark 2.4s ease both;
 }
 
@@ -209,7 +215,7 @@ button {
 }
 
 .story-line.current-line {
-    text-shadow: 0 0 14px rgba(0, 245, 212, 0.2), 0 0 24px rgba(155, 93, 229, 0.14);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
 }
 
 .story-line.current-line::before {
@@ -250,27 +256,27 @@ button {
 }
 
 .story-emphasis.accent-cyan {
-    color: var(--accent-primary);
+    color: #ffffff;
     text-shadow: 0 0 0 transparent;
 }
 
 .story-emphasis.accent-purple {
-    color: var(--accent-secondary);
+    color: #ffffff;
     text-shadow: 0 0 0 transparent;
 }
 
 .story-emphasis.accent-green {
-    color: var(--accent-scenic);
+    color: #ffffff;
     text-shadow: 0 0 0 transparent;
 }
 
 .story-emphasis.accent-pink {
-    color: var(--accent-adventure);
+    color: #ffffff;
     text-shadow: 0 0 0 transparent;
 }
 
 .story-emphasis.accent-orange {
-    color: var(--accent-warm);
+    color: #ffffff;
     text-shadow: 0 0 0 transparent;
 }
 
@@ -328,6 +334,15 @@ button {
     }
     100% {
         transform: translate3d(2%, 1%, 0) scale(1.03);
+    }
+}
+
+@keyframes storyCrawl {
+    0% {
+        transform: rotateX(24deg) translate3d(0, 26vh, 0) scale(1.02);
+    }
+    100% {
+        transform: rotateX(24deg) translate3d(0, -130vh, 0) scale(0.72);
     }
 }
 

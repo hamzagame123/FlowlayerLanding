@@ -13,6 +13,7 @@ class FlowLayerApp {
         this.currentDrive = null;
         this.feedback = {};
         this.storyTimeouts = [];
+        this.storyCrawlTimer = null;
         this.destinationRecognition = null;
         this.destinationListening = false;
         this.driveDurationInterval = null;
@@ -27,6 +28,7 @@ class FlowLayerApp {
         const storyScreen = document.getElementById('storyIntro');
         const storyButton = document.getElementById('storyStartBtn');
         const storySkipButton = document.getElementById('storySkipBtn');
+        const storyScroll = document.getElementById('storyScroll');
         const storyLines = [...document.querySelectorAll('.story-line')];
         const storyContainer = document.querySelector('.story-intro-container');
 
@@ -45,17 +47,36 @@ class FlowLayerApp {
             return;
         }
 
+        if (storyScroll) {
+            storyScroll.classList.add('crawl-active');
+        }
+
+        storyLines.forEach(line => {
+            line.dataset.fullText = line.textContent.trim();
+            line.textContent = '';
+        });
+
+        if (storyContainer) {
+            this.storyCrawlTimer = setInterval(() => {
+                if (!this.storyFinished) {
+                    storyContainer.scrollTop += 0.5;
+                }
+            }, 16);
+        }
+
         let timelineDelay = 700;
         storyLines.forEach(line => {
+            const fullText = line.dataset.fullText || '';
             this.storyTimeouts.push(setTimeout(() => {
                 storyLines.forEach(storyLine => storyLine.classList.remove('current-line'));
                 line.classList.add('visible');
                 line.classList.add('current-line');
+                this.typeStoryLine(line, fullText);
                 this.scrollStoryFromMiddle(line, storyContainer);
             }, timelineDelay));
 
             const linePause = Number(line.dataset.pause || 1800);
-            timelineDelay += linePause;
+            timelineDelay += linePause + Math.min(fullText.length * 16, 1300);
         });
 
         this.storyTimeouts.push(setTimeout(() => {
@@ -69,6 +90,26 @@ class FlowLayerApp {
         storyButton.addEventListener('click', () => this.finishStoryExperience());
         if (storySkipButton) storySkipButton.addEventListener('click', () => this.finishStoryExperience());
         storyScreen.addEventListener('dblclick', () => this.finishStoryExperience());
+    }
+
+    typeStoryLine(lineEl, fullText) {
+        if (!lineEl) return;
+        lineEl.textContent = '';
+        let charIndex = 0;
+        const text = String(fullText || '');
+
+        const revealNext = () => {
+            if (this.storyFinished || !lineEl.isConnected) return;
+            lineEl.textContent = text.slice(0, charIndex);
+            charIndex += 1;
+
+            if (charIndex <= text.length) {
+                const timeoutId = setTimeout(revealNext, 20);
+                this.storyTimeouts.push(timeoutId);
+            }
+        };
+
+        revealNext();
     }
 
     scrollStoryFromMiddle(lineEl, containerEl) {
@@ -97,6 +138,10 @@ class FlowLayerApp {
 
         this.storyTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
         this.storyTimeouts = [];
+        if (this.storyCrawlTimer) {
+            clearInterval(this.storyCrawlTimer);
+            this.storyCrawlTimer = null;
+        }
 
         const storyScreen = document.getElementById('storyIntro');
         if (storyScreen) {
