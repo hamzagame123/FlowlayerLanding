@@ -812,6 +812,77 @@ button {
     gap: 12px;
 }
 
+.camera-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    margin-left: 8px;
+    background: rgba(12, 12, 18, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: border-color var(--transition), color var(--transition);
+}
+
+.camera-toggle:hover {
+    border-color: var(--border-medium);
+    color: var(--text-primary);
+}
+
+.sim-three-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 100px;
+    transform: translateX(-50%);
+    z-index: 9;
+    margin: 0;
+    padding: 8px 14px;
+    max-width: min(90vw, 420px);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.38);
+    text-align: center;
+    pointer-events: none;
+    line-height: 1.45;
+}
+
+.sim-three-hint strong {
+    color: rgba(0, 245, 212, 0.55);
+    font-weight: 500;
+}
+
+.cesium-credit {
+    position: absolute;
+    left: 50%;
+    bottom: 78px;
+    transform: translateX(-50%);
+    z-index: 9;
+    margin: 0;
+    padding: 0 12px;
+    max-width: min(92vw, 480px);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.32);
+    text-align: center;
+    pointer-events: auto;
+}
+
+.cesium-credit a {
+    color: rgba(0, 245, 212, 0.5);
+    text-decoration: none;
+}
+
+.cesium-credit a:hover {
+    color: var(--accent-primary);
+    text-decoration: underline;
+}
+
 .header-center {
     position: absolute;
     left: 50%;

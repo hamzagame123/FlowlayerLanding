@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowLayer | Driving Simulator v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/styles/main.css">
+</head>
+<body>
+
+    <!-- Cinematic Story Intro -->
+    <div id="storyIntro" class="screen active" aria-live="polite">
+        <div class="story-intro-container">
+            <p class="story-kicker">Memory Reconstruction // FlowLayer</p>
+            <button class="story-skip-btn" id="storySkipBtn" type="button" aria-label="Skip intro">Skip</button>
+            <div class="story-scroll" id="storyScroll">
+                <p class="story-line" data-pause="2400">Year <span class="story-emphasis accent-purple">2126</span>.</p>
+                <p class="story-line" data-pause="2200">For over a <span class="story-emphasis accent-cyan">century</span>, humans have not <span class="story-emphasis accent-orange">driven</span> their own vehicles.</p>
+                <p class="story-line" data-pause="2200">After the <span class="story-emphasis accent-purple">Automation Accords</span> of 2021, all transportation was handed over to <span class="story-emphasis accent-cyan">artificial systems</span>.</p>
+                <p class="story-line" data-pause="1900"><span class="story-emphasis accent-orange">Steering wheels</span> were removed. <span class="story-emphasis accent-orange">Pedals</span> disappeared. Roads became optimized pathways for machines.</p>
+                <p class="story-line" data-pause="1700">Driving was declared <span class="story-emphasis accent-orange">inefficient</span>. <span class="story-emphasis accent-pink">Dangerous</span>. <span class="story-emphasis accent-pink">Emotional</span>.</p>
+                <p class="story-line" data-pause="2600">And then it was <span class="story-emphasis accent-purple">forgotten</span>.</p>
+                <p class="story-divider">&#x2E3B;</p>
+                <p class="story-line" data-pause="2200">In the present day, humanity lives almost entirely within <span class="story-emphasis accent-purple">neural virtual environments</span>.</p>
+                <p class="story-line" data-pause="2000"><span class="story-emphasis accent-cyan">Consciousness</span> is linked to immersive systems. Physical movement is optional. Real-world control is <span class="story-emphasis accent-orange">obsolete</span>.</p>
+                <p class="story-line" data-pause="2000">Very few remember what it felt like to grip a <span class="story-emphasis accent-orange">wheel</span>.</p>
+                <p class="story-line" data-pause="1800">To choose a <span class="story-emphasis accent-green">road</span>.</p>
+                <p class="story-line" data-pause="2600">To get lost on <span class="story-emphasis accent-green">purpose</span>.</p>
+                <p class="story-divider">&#x2E3B;</p>
+                <p class="story-line" data-pause="2200"><span class="story-emphasis accent-cyan">FlowLayer</span> was created to restore a lost human experience.</p>
+                <p class="story-line" data-pause="1700">Not transportation.</p>
+                <p class="story-line" data-pause="1700">But <span class="story-emphasis accent-cyan">intention</span>.</p>
+                <p class="story-line" data-pause="1700">Not efficiency.</p>
+                <p class="story-line" data-pause="2600">But <span class="story-emphasis accent-pink">feeling</span>.</p>
+                <p class="story-divider">&#x2E3B;</p>
+                <p class="story-line" data-pause="2000">Inside this <span class="story-emphasis accent-purple">simulation</span>, you will not travel to arrive.</p>
+                <p class="story-line" data-pause="2000">You will travel to <span class="story-emphasis accent-cyan">remember</span>.</p>
+                <p class="story-line" data-pause="1800">Choose how you want to <span class="story-emphasis accent-green">feel</span>.</p>
+                <p class="story-line" data-pause="1000">And <span class="story-emphasis accent-orange">drive</span>.</p>
+            </div>
+            <button class="story-start-btn" id="storyStartBtn" type="button">Begin your journey</button>
+        </div>
+    </div>
+
+    <!-- Onboarding Screen -->
+    <div id="onboarding" class="screen">
+        <div class="onboarding-container">
+            <div class="onboarding-header">
+                <div class="flow-logo">
+                    <span class="logo-icon">&#x25C8;</span>
+                    <span class="logo-text">FlowLayer</span>
+                </div>
+                <p class="tagline">Let's personalize your driving experience</p>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+                <span class="progress-text" id="progressText">1 / 10</span>
+            </div>
+            <div class="question-container" id="questionContainer"></div>
+            <div class="onboarding-nav">
+                <button class="nav-btn secondary" id="prevBtn" disabled>
+                    <span>&larr;</span> Back
+                </button>
+                <button class="nav-btn primary" id="nextBtn">
+                    Next <span>&rarr;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Simulator Screen -->
+    <div id="simulator" class="screen">
+        <!-- Needle Engine 3D Canvas -->
+        <needle-engine id="needleCanvas"></needle-engine>
+
+        <!-- Gamepad connection indicator -->
+        <div class="gamepad-status" id="gamepadStatus">
+            <span class="gamepad-icon">&#x1F3AE;</span>
+            <span class="gamepad-text" id="gamepadText">No controller</span>
+        </div>
+
+        <!-- Camera mode toggle -->
+        <button class="camera-toggle" id="cameraModeBtn" type="button" title="Toggle camera mode">
+            <span id="cameraModeIcon">&#x1F3A5;</span>
+            <span id="cameraModeLabel">Chase</span>
+        </button>
+
+        <!-- Header -->
+        <header class="sim-header">
+            <div class="header-left">
+                <div class="flow-logo small">
+                    <span class="logo-icon">&#x25C8;</span>
+                    <span class="logo-text">FlowLayer</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="destination-panel">
+                    <div class="destination-input-wrap">
+                        <span class="destination-icon">&#x1F4CD;</span>
+                        <input id="destinationInputSim" class="destination-input" type="text" placeholder="Where do you want to go?" value="Toronto Waterfront">
+                        <button class="destination-voice-btn" id="destinationVoiceBtn" type="button" title="Speak destination">&#x1F399;</button>
+                    </div>
+                    <div class="current-route" id="currentRoute">
+                        <span class="route-icon">&#x1F6E4;</span>
+                        <span class="route-name">Harbourfront Loop</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn" id="voiceToggle" title="Voice Control">
+                    <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                    <div class="voice-indicator" id="voiceIndicator"></div>
+                </button>
+                <button class="icon-btn" id="playlistBtn" title="Ride Playlist">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+                        <circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- FlowLayer Assistant Panel -->
+        <aside class="assistant-panel" id="assistantPanel">
+            <div class="assistant-header">
+                <h3>FlowLayer Assistant</h3>
+                <button class="collapse-btn" id="collapseAssistant">&minus;</button>
+            </div>
+            <div class="assistant-content">
+                <div class="assistant-section">
+                    <label class="section-label">Current Vibe</label>
+                    <div class="vibe-selector" id="vibeSelector">
+                        <button class="vibe-btn active" data-vibe="scenic" style="--vibe-color: #06d6a0">
+                            <span>&#x1F3DE;</span><span>Scenic</span>
+                        </button>
+                        <button class="vibe-btn" data-vibe="chill" style="--vibe-color: #00f5d4">
+                            <span>&#x1F30A;</span><span>Chill</span>
+                        </button>
+                        <button class="vibe-btn" data-vibe="adventure" style="--vibe-color: #f72585">
+                            <span>&#x1F3A2;</span><span>Adventure</span>
+                        </button>
+                        <button class="vibe-btn" data-vibe="fastest" style="--vibe-color: #ff9f1c">
+                            <span>&#x26A1;</span><span>Fast</span>
+                        </button>
+                        <button class="vibe-btn hidden" id="customVibeBtn" data-vibe="custom" style="--vibe-color: #9b5de5">
+                            <span>&#x2728;</span><span id="customVibeLabel">Your Vibe</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="assistant-section">
+                    <label class="section-label">Current Drive</label>
+                    <div class="drive-stats">
+                        <div class="stat">
+                            <span class="stat-value" id="statSpeed">0</span>
+                            <span class="stat-label">mph</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="statDistance">0.0</span>
+                            <span class="stat-label">miles</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value" id="statTime">0:00</span>
+                            <span class="stat-label">time</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="assistant-section">
+                    <label class="section-label">Suggested Routes</label>
+                    <div class="route-suggestions" id="routeSuggestions">
+                        <div class="route-card active" data-route="coastal">
+                            <div class="route-preview-img coastal"></div>
+                            <div class="route-info"><h4>Harbourfront Loop</h4><p>Toronto Waterfront &bull; 4 mi</p></div>
+                        </div>
+                        <div class="route-card" data-route="mountain">
+                            <div class="route-preview-img mountain"></div>
+                            <div class="route-info"><h4>Skyline Run</h4><p>Downtown Toronto &bull; 3 mi</p></div>
+                        </div>
+                        <div class="route-card" data-route="forest">
+                            <div class="route-preview-img forest"></div>
+                            <div class="route-info"><h4>Ravine Route</h4><p>Don River Edge &bull; 3 mi</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="assistant-section voice-hints">
+                    <label class="section-label">Voice Commands</label>
+                    <div class="hints-list">
+                        <span class="hint">"Change to scenic route"</span>
+                        <span class="hint">"Speed up"</span>
+                        <span class="hint">"Free camera"</span>
+                        <span class="hint">"End drive"</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Bottom HUD -->
+        <div class="sim-hud">
+            <div class="hud-left">
+                <div class="speed-display">
+                    <span class="speed-value" id="speedDisplay">0</span>
+                    <span class="speed-unit">mph</span>
+                </div>
+            </div>
+            <div class="hud-center">
+                <div class="drive-controls">
+                    <button class="control-btn" id="startDriveBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <span>Start Drive</span>
+                    </button>
+                    <button class="control-btn hidden" id="endDriveBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                        <span>End Drive</span>
+                    </button>
+                </div>
+            </div>
+            <div class="hud-right">
+                <button class="add-to-playlist" id="addToPlaylistBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Save to Playlist
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Feedback Overlay -->
+        <div class="voice-overlay" id="voiceOverlay">
+            <div class="voice-visualizer">
+                <div class="voice-ring"></div>
+                <div class="voice-ring"></div>
+                <div class="voice-ring"></div>
+            </div>
+            <p class="voice-text" id="voiceText">Listening...</p>
+        </div>
+    </div>
+
+    <!-- Post-Ride Feedback Modal -->
+    <div class="modal-overlay" id="feedbackModal">
+        <div class="modal-content feedback-modal">
+            <div class="modal-header">
+                <h2>How was your drive?</h2>
+                <p>Help us personalize your future routes</p>
+            </div>
+            <div class="feedback-questions">
+                <div class="feedback-question">
+                    <label>Did this route match your expectations?</label>
+                    <div class="rating-scale" data-question="expectations">
+                        <button class="rating-btn" data-value="1">&#x1F61E;</button>
+                        <button class="rating-btn" data-value="2">&#x1F610;</button>
+                        <button class="rating-btn" data-value="3">&#x1F642;</button>
+                        <button class="rating-btn" data-value="4">&#x1F60A;</button>
+                        <button class="rating-btn" data-value="5">&#x1F929;</button>
+                    </div>
+                </div>
+                <div class="feedback-question">
+                    <label>How scenic was the route for you?</label>
+                    <div class="rating-scale" data-question="scenic">
+                        <button class="rating-btn" data-value="1">1</button>
+                        <button class="rating-btn" data-value="2">2</button>
+                        <button class="rating-btn" data-value="3">3</button>
+                        <button class="rating-btn" data-value="4">4</button>
+                        <button class="rating-btn" data-value="5">5</button>
+                    </div>
+                </div>
+                <div class="feedback-question">
+                    <label>Would you drive this route again?</label>
+                    <div class="yes-no-btns" data-question="again">
+                        <button class="choice-btn" data-value="yes">Yes, definitely</button>
+                        <button class="choice-btn" data-value="maybe">Maybe</button>
+                        <button class="choice-btn" data-value="no">No</button>
+                    </div>
+                </div>
+                <div class="feedback-question">
+                    <label>Set your preferred drive duration for next time</label>
+                    <div class="duration-btns" data-question="preferred_duration">
+                        <button class="duration-btn" type="button" data-minutes="10">10 min</button>
+                        <button class="duration-btn" type="button" data-minutes="20">20 min</button>
+                        <button class="duration-btn" type="button" data-minutes="30">30 min</button>
+                        <button class="duration-btn" type="button" data-minutes="45">45 min</button>
+                    </div>
+                </div>
+                <div class="feedback-question">
+                    <label>Any notes about this drive?</label>
+                    <textarea class="feedback-notes" id="feedbackNotes" placeholder="The sunset views were amazing..."></textarea>
+                </div>
+                <div class="feedback-question">
+                    <label class="playlist-save-toggle">
+                        <input type="checkbox" id="saveToPlaylistAfterDrive" checked>
+                        <span>Save this drive to playlist</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="skipFeedback">Skip</button>
+                <button class="modal-btn primary" id="submitFeedback">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Playlist Modal -->
+    <div class="modal-overlay" id="playlistModal">
+        <div class="modal-content playlist-modal">
+            <div class="modal-header">
+                <h2>Your Drive Playlist</h2>
+                <button class="close-modal" id="closePlaylist">&times;</button>
+            </div>
+            <div class="playlist-content" id="playlistContent"></div>
+            <div class="playlist-empty" id="playlistEmpty">
+                <span class="empty-icon">&#x1F3B5;</span>
+                <p>No saved drives yet</p>
+                <span class="empty-hint">Complete a drive and save it to your playlist</span>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

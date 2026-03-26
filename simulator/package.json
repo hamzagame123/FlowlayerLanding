@@ -1,0 +1,18 @@
+{
+  "name": "flowlayer-simulator-three",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "3d-tiles-renderer": "^0.4.23",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.14"
+  }
+}

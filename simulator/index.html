@@ -93,6 +93,10 @@
                     <span class="logo-icon">◈</span>
                     <span class="logo-text">FlowLayer</span>
                 </div>
+                <button type="button" class="camera-toggle" id="cameraModeBtn" title="Chase view or free look (right-drag in Look mode)">
+                    <span id="cameraModeIcon">🎥</span>
+                    <span id="cameraModeLabel">Chase</span>
+                </button>
             </div>
             <div class="header-center">
                 <div class="destination-panel">
@@ -263,6 +267,14 @@
             </div>
         </div>
         
+        <p class="sim-three-hint" id="simThreeHint">W/S drive · A/D steer · Wheel zoom · <strong>Look</strong> + right-drag to orbit</p>
+        <p class="cesium-credit" id="cesiumCredit">
+            3D city:
+            <a href="https://cesium.com/platform/cesium-ion/content/cesium-osm-buildings" target="_blank" rel="noopener noreferrer">Cesium OSM Buildings</a>
+            ·
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap</a>
+        </p>
+
         <!-- Voice Feedback Overlay -->
         <div class="voice-overlay" id="voiceOverlay">
             <div class="voice-visualizer">
@@ -364,11 +376,6 @@
         </div>
     </div>
     
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="personalization.js"></script>
-    <script src="simulator.js"></script>
-    <script src="voice.js"></script>
-    <script src="app.js"></script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>
