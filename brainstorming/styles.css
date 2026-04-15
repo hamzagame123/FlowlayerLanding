@@ -95,12 +95,13 @@ body { font-family: var(--font-body); }
 .hero {
   position: relative; z-index: 10;
   display: grid;
-  grid-template-columns: 1fr 260px;
-  gap: 40px;
+  grid-template-columns: 1fr 240px;
+  gap: 60px;
   align-items: center;
+  max-width: 1200px;
 }
 
-.hero-left { max-width: 760px; }
+.hero-left { max-width: 700px; }
 
 .kicker {
   display: flex; align-items: center; gap: 10px;
@@ -168,11 +169,12 @@ body { font-family: var(--font-body); }
 .dock {
   position: relative; z-index: 10;
   display: grid;
-  grid-template-columns: 1fr 1px 320px;
+  grid-template-columns: 1fr 1px 300px;
   gap: 0 32px;
   align-items: start;
   padding: 20px 0;
   border-top: 1px solid rgba(0,245,212,.08);
+  max-width: 1200px;
 }
 
 .dock-divider {
@@ -339,6 +341,7 @@ body { font-family: var(--font-body); }
   display: flex; justify-content: space-between; align-items: baseline;
   padding-top: 12px;
   border-top: 1px solid rgba(0,245,212,.08);
+  width: 100%;
 }
 .base-flow {
   display: flex; align-items: center; gap: 10px;
