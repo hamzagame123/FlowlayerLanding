@@ -93,7 +93,7 @@ body { font-family: var(--font-body); }
   gap: 0;
   align-items: stretch;
   padding-top: 16px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .col {
@@ -124,14 +124,14 @@ body { font-family: var(--font-body); }
    ═══════════════════════════════════════ */
 
 .col-narrative {
-  justify-content: center;
+  justify-content: space-between;
   gap: 0;
   padding-top: 8px;
   padding-bottom: 4px;
 }
 
-.narrative-top { }
-.narrative-bottom { margin-top: auto; }
+.narrative-top { flex-shrink: 0; }
+.narrative-bottom { flex-shrink: 0; }
 
 .kicker {
   display: flex; align-items: center; gap: 10px;

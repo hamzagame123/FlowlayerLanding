@@ -24,7 +24,7 @@ const chapters = [
   {
     kicker: "THE MACHINE",
     title: 'Built to <em>Feel Real</em>',
-    body: "Built on CesiumJS — a geospatial 3D engine that renders real cities at 1:1 scale using satellite imagery, world terrain, and OpenStreetMap building data as 3D Tiles. Google Routes plans your drive. Gemini narrates it. You steer through streets that actually exist.",
+    body: "Built on CesiumJS — a geospatial 3D engine that renders real cities at 1:1 scale using satellite imagery, world terrain, and OpenStreetMap building data as 3D Tiles. Google Routes plans your path. Gemini 3.1 Pro with Google Maps grounding narrates it. You steer through streets that actually exist.",
     vibe: "READY",
     cards: [
       { label: "3D ENGINE", val: "CESIUMJS" },
@@ -35,12 +35,12 @@ const chapters = [
   {
     kicker: "THE ROUTE",
     title: 'Real Roads, <em>Real Cities</em>',
-    body: "Routes are computed live through Google's Routes API — real turn-by-turn directions on real roads. OpenStreetMap centerline data draws the streets beneath you. A Leaflet mini-map tracks your position. Gemini reads your driving style and adjusts the narration to match.",
+    body: "Routes are computed live through Google's Routes API — real turn-by-turn directions on real roads. OpenStreetMap centerline data draws the streets beneath you. A Leaflet mini-map tracks your position. Gemini 3.1 Pro reads your driving style and adjusts the narration to match.",
     vibe: "ANALYTICAL",
     cards: [
       { label: "ROUTING", val: "GOOGLE API" },
       { label: "ROAD DATA", val: "OSM EXTRACT" },
-      { label: "NAVIGATION", val: "GEMINI AI" },
+      { label: "AI NAV", val: "GEMINI 3.1 PRO" },
     ]
   },
   {
