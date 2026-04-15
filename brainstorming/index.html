@@ -6,7 +6,7 @@
   <title>Motional — Nobody Drives Anymore</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"></script>
   <link rel="stylesheet" href="./styles.css" />
 </head>
@@ -36,6 +36,7 @@
     <div class="corner corner-bl"></div>
     <div class="corner corner-br"></div>
 
+    <!-- ── TOP BAR ────────────────────────── -->
     <header class="bar">
       <div class="bar-left">
         <span class="brand"><span class="brand-icon">◈</span> MOTIONAL</span>
@@ -51,15 +52,26 @@
       </div>
     </header>
 
-    <section class="hero">
-      <div class="hero-left">
-        <p class="kicker" id="kicker"><span class="kicker-num">01</span> <span class="kicker-sep">—</span> <span class="kicker-text" id="kickerText">THE EXHIBIT</span></p>
-        <h1 class="title" id="title"></h1>
-        <p class="body" id="body"></p>
-        <div class="progress" id="progress"></div>
+    <!-- ── THREE-COLUMN BODY ──────────────── -->
+    <section class="columns">
+
+      <!-- COL 1 — THE NARRATIVE -->
+      <div class="col col-narrative" id="colNarrative">
+        <div class="narrative-top">
+          <p class="kicker" id="kicker"><span class="kicker-num">01</span> <span class="kicker-sep">—</span> <span class="kicker-text" id="kickerText">THE EXHIBIT</span></p>
+          <h1 class="title" id="title"></h1>
+          <p class="body" id="body"></p>
+        </div>
+        <div class="info-cards" id="cards"></div>
+        <div class="narrative-bottom">
+          <div class="progress" id="progress"></div>
+          <p class="col-quote" id="quote">"The average commute in 2025 was 41 minutes. Most people hated it."</p>
+        </div>
       </div>
 
-      <div class="hero-right">
+      <!-- COL 2 — THE SIMULATOR -->
+      <div class="col col-sim" id="colSim">
+        <p class="col-label">THE SIMULATOR</p>
         <svg class="ring" viewBox="0 0 220 220">
           <circle cx="110" cy="110" r="100" fill="none" stroke="rgba(0,245,212,0.06)" stroke-width="1"/>
           <circle cx="110" cy="110" r="80" fill="none" stroke="rgba(0,245,212,0.04)" stroke-width=".5"/>
@@ -73,38 +85,53 @@
           <div class="telem-row"><span class="telem-label">STATUS</span><span class="telem-val telem-live">WAITING</span></div>
           <div class="telem-row"><span class="telem-label">SESSION</span><span class="telem-val" id="telemSession">047</span></div>
           <div class="telem-row"><span class="telem-label">VIBE</span><span class="telem-val" id="telemVibe">CURIOUS</span></div>
+          <div class="telem-row"><span class="telem-label">ENGINE</span><span class="telem-val">CESIUM 3D</span></div>
+          <div class="telem-row"><span class="telem-label">RENDER</span><span class="telem-val telem-live">REAL-TIME</span></div>
+          <div class="telem-row"><span class="telem-label">SCALE</span><span class="telem-val">1 : 1</span></div>
+          <div class="telem-row"><span class="telem-label">FRAME</span><span class="telem-val" id="scatterFrame">0000</span></div>
+          <div class="telem-row"><span class="telem-label">UPTIME</span><span class="telem-val" id="scatterUptime">00:00:00</span></div>
+        </div>
+        <p class="sim-desc">Steering wheel. Motion seat. Real cities rebuilt at 1 : 1 scale in Cesium's geospatial 3D engine. An AI watches every turn you make.</p>
+        <div class="sim-pipeline">
+          <span>MAP</span><span class="flow-arrow">→</span>
+          <span>AI</span><span class="flow-arrow">→</span>
+          <span>WHEEL</span><span class="flow-arrow">→</span>
+          <span>YOU</span>
         </div>
       </div>
+
+      <!-- COL 3 — QUIZ + QUEUE -->
+      <div class="col col-interact" id="colInteract">
+        <div class="interact-quiz">
+          <p class="col-label">SET YOUR VIBE</p>
+          <button class="dock-start" id="startBtn">START</button>
+          <p class="dock-prompt" id="prompt"></p>
+          <div class="dock-chips" id="promptChips"></div>
+          <div class="dock-answer">
+            <input type="text" class="dock-answer-input" id="answerInput" placeholder="Or type your own answer..." maxlength="120" autocomplete="off" />
+            <button class="dock-mic" id="micBtn" title="Speak your answer">🎤</button>
+          </div>
+          <p class="dock-transcript" id="transcript"></p>
+        </div>
+        <div class="interact-divider"></div>
+        <div class="interact-queue">
+          <p class="col-label">JOIN THE QUEUE</p>
+          <div class="dock-join">
+            <input type="text" class="dock-input" placeholder="Your name" id="nameInput" maxlength="24" autocomplete="off" />
+            <button class="dock-btn" id="joinBtn">JOIN</button>
+          </div>
+          <div class="dock-status" id="queueStatus">
+            <span class="dock-count" id="queueCount">Empty</span>
+            <span class="dock-sep">·</span>
+            <span class="dock-wait" id="queueWait">Walk in</span>
+          </div>
+          <div class="dock-names" id="queueNames"></div>
+        </div>
+      </div>
+
     </section>
 
-    <section class="dock" id="dock">
-      <div class="dock-q">
-        <button class="dock-start" id="startBtn">START</button>
-        <p class="dock-label">SET YOUR VIBE</p>
-        <p class="dock-prompt" id="prompt"></p>
-        <div class="dock-chips" id="promptChips"></div>
-        <div class="dock-answer">
-          <input type="text" class="dock-answer-input" id="answerInput" placeholder="Or type your own answer..." maxlength="120" autocomplete="off" />
-          <button class="dock-mic" id="micBtn" title="Speak your answer">🎤</button>
-        </div>
-        <p class="dock-transcript" id="transcript"></p>
-      </div>
-      <div class="dock-divider"></div>
-      <div class="dock-queue">
-        <p class="dock-label">JOIN THE QUEUE</p>
-        <div class="dock-join">
-          <input type="text" class="dock-input" placeholder="Your name" id="nameInput" maxlength="24" autocomplete="off" />
-          <button class="dock-btn" id="joinBtn">JOIN</button>
-        </div>
-        <div class="dock-status" id="queueStatus">
-          <span class="dock-count" id="queueCount">3 in queue</span>
-          <span class="dock-sep">·</span>
-          <span class="dock-wait" id="queueWait">~15 min</span>
-        </div>
-        <div class="dock-names" id="queueNames"></div>
-      </div>
-    </section>
-
+    <!-- ── FOOTER ─────────────────────────── -->
     <footer class="base">
       <div class="base-flow">
         <span>MAP</span><span class="flow-arrow">→</span>
@@ -112,7 +139,7 @@
         <span>WHEEL</span><span class="flow-arrow">→</span>
         <span>YOU</span>
       </div>
-      <p class="base-quote" id="quote">The average commute in 2025 was 41 minutes. Most people hated it.</p>
+      <p class="base-quote" id="quoteFooter"></p>
     </footer>
 
   </main>

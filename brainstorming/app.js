@@ -2,68 +2,69 @@ const chapters = [
   {
     kicker: "THE EXHIBIT",
     title: 'Nobody Drives <em>Anymore</em>',
-    body: "Manual driving disappeared decades ago. This machine lets you try it. Sit down, grab the wheel, and steer yourself through a real city. No autopilot. No algorithm. Just you and the road.",
-    vibe: "CURIOUS"
+    body: "Manual driving disappeared decades ago. This simulator lets you try it — sit down, grab the wheel, and steer yourself through a real city. No autopilot. No routing algorithm. Just you, the road, and whatever you decide to do with it.",
+    vibe: "CURIOUS",
+    cards: [
+      { label: "LAST MANUAL DRIVER", val: "2071" },
+      { label: "SESSION LENGTH", val: "~5 MIN" },
+      { label: "VISITORS TODAY", val: "38" },
+    ]
   },
   {
     kicker: "THE BEHAVIOR",
     title: 'Driving Was <em>Strange</em>',
-    body: "People sat in metal boxes and steered themselves through traffic for hours every day. They got lost. They took wrong turns on purpose. They picked the slow road because it looked nice. None of this made sense, and all of it mattered.",
-    vibe: "NOSTALGIC"
+    body: "People sat in metal boxes and navigated traffic for hours every day. They got lost. They took wrong turns on purpose. They picked the slow road because it looked nice. None of this was efficient, and all of it mattered.",
+    vibe: "NOSTALGIC",
+    cards: [
+      { label: "AVG DAILY COMMUTE", val: "41 MIN" },
+      { label: "GLOBAL DRIVERS (2025)", val: "1.4B" },
+      { label: "ROAD RAGE INCIDENTS/YR", val: "1,800+" },
+    ]
   },
   {
     kicker: "THE MACHINE",
-    title: 'Wheel. Chair. City. <em>Go.</em>',
-    body: "A steering wheel. A motion seat. Cities rendered in Cesium, a geospatial 3D engine that rebuilds real places at actual scale. You drive through streets that exist, make turns that matter, and an AI watches what you do.",
-    vibe: "READY"
+    title: 'Built to <em>Feel Real</em>',
+    body: "A force-feedback steering wheel. A motion seat that tilts into turns. Cities rendered at 1:1 scale in Cesium, a geospatial 3D engine that rebuilds real streets from satellite and terrain data. You drive actual roads — not a game.",
+    vibe: "READY",
+    cards: [
+      { label: "RENDER ENGINE", val: "CESIUM ION" },
+      { label: "WORLD SCALE", val: "1 : 1" },
+      { label: "INPUT DEVICE", val: "FORCE WHEEL" },
+    ]
   },
   {
     kicker: "THE ROUTE",
-    title: 'Real Roads, <em>Real Places</em>',
-    body: "The routes come from real cities. The intersections are real. The AI reads your driving — why you slowed down, why you went left, why you stopped at that corner — and turns it into a portrait of how you move.",
-    vibe: "ANALYTICAL"
+    title: 'Real Roads, <em>Real Cities</em>',
+    body: "Every route comes from an actual city. The intersections are real. An AI reads your driving in real-time — when you brake, where you look, why you went left instead of right — and builds a profile of how you move through space.",
+    vibe: "ANALYTICAL",
+    cards: [
+      { label: "CITIES AVAILABLE", val: "12" },
+      { label: "AI MODEL", val: "FLOWLAYER V3" },
+      { label: "ROAD COVERAGE", val: "4,200 KM" },
+    ]
   },
   {
-    kicker: "THE ARCHIVE",
-    title: 'You Leave Something <em>Behind</em>',
-    body: "Every session is saved. How you drove, where you paused, what you skipped. The next person sees what you left behind. Over time, it builds a record of how humans used to navigate — not efficiently, but humanly.",
-    vibe: "REFLECTIVE"
+    kicker: "THE CALIBRATION",
+    title: 'Tell Us How <em>You Drive</em>',
+    body: "Before you sit down, we ask you a few questions. Not a test — more like a conversation. What kind of road feels right? Fast or slow? The answers shape your session. The AI uses them to pick your route, your weather, your time of day.",
+    vibe: "PERSONAL",
+    cards: [
+      { label: "QUESTIONS", val: "3–5" },
+      { label: "MODES", val: "SCENIC · RUSH · ZEN" },
+      { label: "PERSONALIZATION", val: "REAL-TIME" },
+    ]
   }
 ];
 
 const prompts = [
-  {
-    text: "How do you want this drive to feel?",
-    chips: ["Scenic and slow", "Fast and direct", "Calm and quiet", "Surprise me"]
-  },
-  {
-    text: "What kind of road sounds right?",
-    chips: ["Coastal highway", "Mountain pass", "City streets", "Quiet backroads"]
-  },
-  {
-    text: "What are you in the mood for?",
-    chips: ["Something beautiful", "Something intense", "Something unfamiliar", "I just want to drive"]
-  },
-  {
-    text: "Pick a time of day.",
-    chips: ["Golden hour", "Night", "Early morning", "High noon"]
-  },
-  {
-    text: "What would make this drive worth it?",
-    chips: ["A great view", "The feeling of speed", "Getting lost somewhere", "Arriving different"]
-  },
-  {
-    text: "What kind of energy do you want?",
-    chips: ["Relaxed", "Focused", "Adventurous", "Meditative"]
-  },
-  {
-    text: "Fastest route or the scenic one?",
-    chips: ["Fastest", "Scenic", "Whichever looks better", "I don't care"]
-  },
-  {
-    text: "When this drive ends, how should you feel?",
-    chips: ["Calm", "Awake", "Reset", "Like I went somewhere"]
-  }
+  { text: "How do you want this drive to feel?", chips: ["Scenic and slow", "Fast and direct", "Calm and quiet", "Surprise me"] },
+  { text: "What kind of road sounds right?", chips: ["Coastal highway", "Mountain pass", "City streets", "Quiet backroads"] },
+  { text: "What are you in the mood for?", chips: ["Something beautiful", "Something intense", "Something unfamiliar", "I just want to drive"] },
+  { text: "Pick a time of day.", chips: ["Golden hour", "Night", "Early morning", "High noon"] },
+  { text: "What would make this drive worth it?", chips: ["A great view", "The feeling of speed", "Getting lost somewhere", "Arriving different"] },
+  { text: "What kind of energy do you want?", chips: ["Relaxed", "Focused", "Adventurous", "Meditative"] },
+  { text: "Fastest route or the scenic one?", chips: ["Fastest", "Scenic", "Whichever looks better", "I don't care"] },
+  { text: "When this drive ends, how should you feel?", chips: ["Calm", "Awake", "Reset", "Like I went somewhere"] }
 ];
 
 const quotes = [
@@ -81,7 +82,7 @@ const PROMPT_AUTO_MS = 20000;
 let cur = 0, chapterTimer = null, quoteIdx = 0;
 let promptIdx = 0, promptTimer = null;
 
-const queue = [];
+const queue_list = [];
 const EST_MINUTES_PER = 5;
 
 const $ = s => document.querySelector(s);
@@ -101,7 +102,9 @@ const dom = {
   startBtn: $("#startBtn"),
   nameInput: $("#nameInput"), joinBtn: $("#joinBtn"),
   queueCount: $("#queueCount"), queueWait: $("#queueWait"),
-  queueNames: $("#queueNames"), dock: $("#dock"),
+  queueNames: $("#queueNames"),
+  colNarrative: $("#colNarrative"), colSim: $("#colSim"), colInteract: $("#colInteract"),
+  cards: $("#cards"),
 };
 
 let activeVid = dom.vidFwd, idleVid = dom.vidRev;
@@ -220,7 +223,7 @@ function initClock() {
 function cycleQuote() {
   quoteIdx = (quoteIdx + 1) % quotes.length;
   gsap.to(dom.quote, { opacity: 0, duration: .3, onComplete() {
-    dom.quote.textContent = quotes[quoteIdx];
+    dom.quote.textContent = `"${quotes[quoteIdx]}"`;
     gsap.to(dom.quote, { opacity: 1, duration: .4 });
   }});
 }
@@ -252,6 +255,18 @@ function updateProgress(i) {
 
 /* ── Chapter transitions ─────────────────────── */
 
+function renderCards(cards) {
+  dom.cards.innerHTML = "";
+  cards.forEach((c, ci) => {
+    const el = document.createElement("div");
+    el.className = "info-card";
+    el.innerHTML = `<span class="info-label">${c.label}</span><span class="info-val">${c.val}</span>`;
+    el.style.opacity = "0";
+    dom.cards.appendChild(el);
+    gsap.to(el, { opacity: 1, duration: .35, delay: .7 + ci * .1 });
+  });
+}
+
 function showChapter(i) {
   const ch = chapters[i];
   const num = String(i + 1).padStart(2, "0");
@@ -262,6 +277,7 @@ function showChapter(i) {
 
   dom.body.textContent = ch.body;
   updateProgress(i);
+  renderCards(ch.cards);
 
   scramble(dom.kickerText, ch.kicker, 400);
   scramble(dom.title, ch.title, 1000);
@@ -274,6 +290,7 @@ function showChapter(i) {
 
 function hideChapter() {
   const tl = gsap.timeline({ defaults: { ease: "power2.in" } });
+  tl.to(dom.cards.children, { opacity: 0, duration: .15, stagger: .03 }, 0);
   tl.to(dom.body, { opacity: 0, duration: .2 }, 0);
   tl.to(dom.title, { opacity: 0, duration: .25 }, .04);
   tl.to(dom.kickerText, { opacity: 0, duration: .15 }, .06);
@@ -293,7 +310,7 @@ function startChapterLoop() {
   chapterTimer = setInterval(nextChapter, CHAPTER_MS);
 }
 
-/* ── Prompts (philosophical questions) ───────── */
+/* ── Prompts ─────────────────────────────────── */
 
 function showPrompt(i) {
   const p = prompts[i];
@@ -311,7 +328,7 @@ function showPrompt(i) {
   });
 }
 
-function pickChip(btn, pi) {
+function pickChip(btn) {
   btn.classList.add("picked");
   clearTimeout(promptTimer);
   setTimeout(() => nextPrompt(), 1200);
@@ -409,9 +426,9 @@ function initStartBtn() {
 /* ── Queue system ────────────────────────────── */
 
 function renderQueue() {
-  dom.queueCount.textContent = queue.length === 0 ? "Empty" : `${queue.length} in queue`;
-  dom.queueWait.textContent = queue.length === 0 ? "Walk in" : `~${queue.length * EST_MINUTES_PER} min`;
-  dom.queueNames.innerHTML = queue.map((name, i) =>
+  dom.queueCount.textContent = queue_list.length === 0 ? "Empty" : `${queue_list.length} in queue`;
+  dom.queueWait.textContent = queue_list.length === 0 ? "Walk in" : `~${queue_list.length * EST_MINUTES_PER} min`;
+  dom.queueNames.innerHTML = queue_list.map((name, i) =>
     `<span class="dock-name">${i === 0 ? "▸ " : ""}${name}</span>`
   ).join("");
 }
@@ -423,7 +440,7 @@ function joinQueue() {
     setTimeout(() => dom.nameInput.style.borderColor = "", 800);
     return;
   }
-  queue.push(name);
+  queue_list.push(name);
   dom.nameInput.value = "";
   renderQueue();
 
@@ -451,10 +468,32 @@ function initVideo() {
   dom.vidFwd.play().catch(() => {});
 }
 
+/* ── Telemetry tickers ───────────────────────── */
+
+function initTickers() {
+  const framEl = document.getElementById("scatterFrame");
+  const uptimeEl = document.getElementById("scatterUptime");
+  if (!framEl) return;
+
+  let frame = 0;
+  const startTime = Date.now();
+
+  setInterval(() => {
+    frame = (frame + 1) % 10000;
+    framEl.textContent = String(frame).padStart(4, "0");
+
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const h = String(Math.floor(elapsed / 3600)).padStart(2, "0");
+    const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
+    const s = String(elapsed % 60).padStart(2, "0");
+    uptimeEl.textContent = `${h}:${m}:${s}`;
+  }, 100);
+}
+
 /* ── Intro ───────────────────────────────────── */
 
 function intro() {
-  gsap.set([".bar", ".hero", ".dock", ".base", ".corner"], { opacity: 0 });
+  gsap.set([".bar", ".columns", ".base", ".corner"], { opacity: 0 });
 
   const m = gsap.timeline({ onComplete() { startChapterLoop(); startPromptTimer(); } });
 
@@ -463,11 +502,15 @@ function intro() {
 
   m.to(".corner", { opacity: 1, duration: .4, stagger: .08 }, "+=.05");
   m.fromTo(".bar", { opacity: 0 }, { opacity: 1, duration: .6 }, "-=.2");
-  m.set(".hero", { opacity: 1 }, "-=.3");
-  m.add(() => showChapter(0), "-=.2");
-  m.fromTo(".dock", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .6 }, "-=.1");
-  m.add(() => showPrompt(0), "-=.4");
-  m.fromTo(".base", { opacity: 0 }, { opacity: 1, duration: .5 }, "-=.3");
+
+  m.set(".columns", { opacity: 1 });
+  m.fromTo(".col-narrative", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: .7 }, "-=.1");
+  m.add(() => showChapter(0), "-=.5");
+  m.fromTo(".col-sim", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: .7 }, "-=.5");
+  m.fromTo(".col-interact", { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: .7 }, "-=.5");
+  m.add(() => showPrompt(0), "-=.3");
+
+  m.fromTo(".base", { opacity: 0 }, { opacity: 1, duration: .5 }, "-=.2");
 }
 
 /* ── Boot ────────────────────────────────────── */
@@ -481,4 +524,5 @@ initQueue();
 initSpeech();
 initAnswerInput();
 initStartBtn();
+initTickers();
 intro();
