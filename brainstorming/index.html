@@ -71,7 +71,7 @@
 
       <!-- COL 2 — THE SIMULATOR -->
       <div class="col col-sim" id="colSim">
-        <p class="col-label">THE SIMULATOR</p>
+        <p class="col-label">THE STACK</p>
         <svg class="ring" viewBox="0 0 220 220">
           <circle cx="110" cy="110" r="100" fill="none" stroke="rgba(0,245,212,0.06)" stroke-width="1"/>
           <circle cx="110" cy="110" r="80" fill="none" stroke="rgba(0,245,212,0.04)" stroke-width=".5"/>
@@ -83,19 +83,24 @@
         </svg>
         <div class="telem">
           <div class="telem-row"><span class="telem-label">STATUS</span><span class="telem-val telem-live">WAITING</span></div>
-          <div class="telem-row"><span class="telem-label">SESSION</span><span class="telem-val" id="telemSession">047</span></div>
           <div class="telem-row"><span class="telem-label">VIBE</span><span class="telem-val" id="telemVibe">CURIOUS</span></div>
-          <div class="telem-row"><span class="telem-label">ENGINE</span><span class="telem-val">CESIUM 3D</span></div>
-          <div class="telem-row"><span class="telem-label">RENDER</span><span class="telem-val telem-live">REAL-TIME</span></div>
+          <div class="telem-row"><span class="telem-label">3D ENGINE</span><span class="telem-val">CESIUMJS</span></div>
+          <div class="telem-row"><span class="telem-label">TERRAIN</span><span class="telem-val">CESIUM WORLD TERRAIN</span></div>
+          <div class="telem-row"><span class="telem-label">BUILDINGS</span><span class="telem-val">ION 3D TILES · OSM</span></div>
+          <div class="telem-row"><span class="telem-label">ROUTING</span><span class="telem-val">GOOGLE ROUTES API</span></div>
+          <div class="telem-row"><span class="telem-label">ROADS</span><span class="telem-val">OSM CENTERLINES</span></div>
+          <div class="telem-row"><span class="telem-label">MINI-MAP</span><span class="telem-val">LEAFLET · OSM</span></div>
+          <div class="telem-row"><span class="telem-label">VOICE</span><span class="telem-val">WEB SPEECH API</span></div>
+          <div class="telem-row"><span class="telem-label">AI</span><span class="telem-val">GEMINI 2.5</span></div>
+          <div class="telem-row"><span class="telem-label">RENDER</span><span class="telem-val telem-live">WEBGL · REAL-TIME</span></div>
           <div class="telem-row"><span class="telem-label">SCALE</span><span class="telem-val">1 : 1</span></div>
-          <div class="telem-row"><span class="telem-label">FRAME</span><span class="telem-val" id="scatterFrame">0000</span></div>
-          <div class="telem-row"><span class="telem-label">UPTIME</span><span class="telem-val" id="scatterUptime">00:00:00</span></div>
+          <div class="telem-row"><span class="telem-label">BUILD</span><span class="telem-val">VITE · ES MODULES</span></div>
         </div>
-        <p class="sim-desc">Steering wheel. Motion seat. Real cities rebuilt at 1 : 1 scale in Cesium's geospatial 3D engine. An AI watches every turn you make.</p>
+        <p class="sim-desc">CesiumJS renders real cities from satellite and terrain data at actual scale. Google Routes plans your drive. An AI guides every turn you make.</p>
         <div class="sim-pipeline">
-          <span>MAP</span><span class="flow-arrow">→</span>
-          <span>AI</span><span class="flow-arrow">→</span>
-          <span>WHEEL</span><span class="flow-arrow">→</span>
+          <span>CESIUM</span><span class="flow-arrow">→</span>
+          <span>ROUTES</span><span class="flow-arrow">→</span>
+          <span>GEMINI</span><span class="flow-arrow">→</span>
           <span>YOU</span>
         </div>
       </div>
@@ -134,9 +139,9 @@
     <!-- ── FOOTER ─────────────────────────── -->
     <footer class="base">
       <div class="base-flow">
-        <span>MAP</span><span class="flow-arrow">→</span>
-        <span>AI</span><span class="flow-arrow">→</span>
-        <span>WHEEL</span><span class="flow-arrow">→</span>
+        <span>CESIUM</span><span class="flow-arrow">→</span>
+        <span>ROUTES</span><span class="flow-arrow">→</span>
+        <span>GEMINI</span><span class="flow-arrow">→</span>
         <span>YOU</span>
       </div>
       <p class="base-quote" id="quoteFooter"></p>

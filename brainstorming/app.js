@@ -24,29 +24,29 @@ const chapters = [
   {
     kicker: "THE MACHINE",
     title: 'Built to <em>Feel Real</em>',
-    body: "A force-feedback steering wheel. A motion seat that tilts into turns. Cities rendered at 1:1 scale in Cesium, a geospatial 3D engine that rebuilds real streets from satellite and terrain data. You drive actual roads — not a game.",
+    body: "Built on CesiumJS — a geospatial 3D engine that renders real cities at 1:1 scale using satellite imagery, world terrain, and OpenStreetMap building data as 3D Tiles. Google Routes plans your drive. Gemini narrates it. You steer through streets that actually exist.",
     vibe: "READY",
     cards: [
-      { label: "RENDER ENGINE", val: "CESIUM ION" },
-      { label: "WORLD SCALE", val: "1 : 1" },
-      { label: "INPUT DEVICE", val: "FORCE WHEEL" },
+      { label: "3D ENGINE", val: "CESIUMJS" },
+      { label: "BUILDINGS", val: "OSM 3D TILES" },
+      { label: "TERRAIN", val: "WGS84 GLOBE" },
     ]
   },
   {
     kicker: "THE ROUTE",
     title: 'Real Roads, <em>Real Cities</em>',
-    body: "Every route comes from an actual city. The intersections are real. An AI reads your driving in real-time — when you brake, where you look, why you went left instead of right — and builds a profile of how you move through space.",
+    body: "Routes are computed live through Google's Routes API — real turn-by-turn directions on real roads. OpenStreetMap centerline data draws the streets beneath you. A Leaflet mini-map tracks your position. Gemini reads your driving style and adjusts the narration to match.",
     vibe: "ANALYTICAL",
     cards: [
-      { label: "CITIES AVAILABLE", val: "12" },
-      { label: "AI MODEL", val: "FLOWLAYER V3" },
-      { label: "ROAD COVERAGE", val: "4,200 KM" },
+      { label: "ROUTING", val: "GOOGLE API" },
+      { label: "ROAD DATA", val: "OSM EXTRACT" },
+      { label: "NAVIGATION", val: "GEMINI AI" },
     ]
   },
   {
     kicker: "THE CALIBRATION",
     title: 'Tell Us How <em>You Drive</em>',
-    body: "Before you sit down, we ask you a few questions. Not a test — more like a conversation. What kind of road feels right? Fast or slow? The answers shape your session. The AI uses them to pick your route, your weather, your time of day.",
+    body: "Before you drive, we ask a few questions. Not a test — a conversation about how you want this to feel. Your answers feed a personalization engine that picks your route type, time of day, and driving vibe. Scenic coastline or fastest highway. Golden hour or midnight. It's your call.",
     vibe: "PERSONAL",
     cards: [
       { label: "QUESTIONS", val: "3–5" },
@@ -94,7 +94,7 @@ const dom = {
   title: $("#title"), body: $("#body"),
   progress: $("#progress"), grain: $("#grain"), clock: $("#clock"),
   quote: $("#quote"), ringNum: $("#ringNum"),
-  telemSession: $("#telemSession"), telemVibe: $("#telemVibe"),
+  telemVibe: $("#telemVibe"),
   vidFwd: $("#vidFwd"), vidRev: $("#vidRev"),
   particles: $("#particles"),
   prompt: $("#prompt"), promptChips: $("#promptChips"),
@@ -468,27 +468,6 @@ function initVideo() {
   dom.vidFwd.play().catch(() => {});
 }
 
-/* ── Telemetry tickers ───────────────────────── */
-
-function initTickers() {
-  const framEl = document.getElementById("scatterFrame");
-  const uptimeEl = document.getElementById("scatterUptime");
-  if (!framEl) return;
-
-  let frame = 0;
-  const startTime = Date.now();
-
-  setInterval(() => {
-    frame = (frame + 1) % 10000;
-    framEl.textContent = String(frame).padStart(4, "0");
-
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    const h = String(Math.floor(elapsed / 3600)).padStart(2, "0");
-    const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, "0");
-    const s = String(elapsed % 60).padStart(2, "0");
-    uptimeEl.textContent = `${h}:${m}:${s}`;
-  }, 100);
-}
 
 /* ── Intro ───────────────────────────────────── */
 
@@ -524,5 +503,4 @@ initQueue();
 initSpeech();
 initAnswerInput();
 initStartBtn();
-initTickers();
 intro();
