@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Motional — Nobody Drives Anymore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+  <div class="loader" id="loader"><div class="loader-line"></div></div>
+
+  <main class="hud" id="hud">
+
+    <div class="bg" aria-hidden="true">
+      <video id="vidFwd" class="bg-vid active" autoplay muted playsinline preload="auto">
+        <source src="./assets/museum-loop-forward.mp4" type="video/mp4" />
+      </video>
+      <video id="vidRev" class="bg-vid" muted playsinline preload="auto">
+        <source src="./assets/museum-loop-reverse.mp4" type="video/mp4" />
+      </video>
+      <div class="bg-tint"></div>
+      <canvas class="bg-grain" id="grain"></canvas>
+      <div class="bg-fade"></div>
+    </div>
+
+    <canvas id="particles" class="particles"></canvas>
+    <div class="scan"></div>
+
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+    <header class="bar">
+      <div class="bar-left">
+        <span class="brand"><span class="brand-icon">◈</span> MOTIONAL</span>
+        <span class="bar-sep">|</span>
+        <span class="bar-label">MANUAL DRIVING ARCHIVE</span>
+      </div>
+      <div class="bar-right">
+        <span class="bar-coord">48.8566° N, 2.3522° E</span>
+        <span class="bar-sep">|</span>
+        <span id="clock" class="bar-clock"></span>
+        <span class="bar-sep">|</span>
+        <span class="bar-session">SESSION <span id="sessionNum">047</span></span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-left">
+        <p class="kicker" id="kicker"><span class="kicker-num">01</span> <span class="kicker-sep">—</span> <span class="kicker-text" id="kickerText">THE EXHIBIT</span></p>
+        <h1 class="title" id="title"></h1>
+        <p class="body" id="body"></p>
+        <div class="progress" id="progress"></div>
+      </div>
+
+      <div class="hero-right">
+        <svg class="ring" viewBox="0 0 220 220">
+          <circle cx="110" cy="110" r="100" fill="none" stroke="rgba(0,245,212,0.06)" stroke-width="1"/>
+          <circle cx="110" cy="110" r="80" fill="none" stroke="rgba(0,245,212,0.04)" stroke-width=".5"/>
+          <circle cx="110" cy="110" r="60" fill="none" stroke="rgba(0,245,212,0.03)" stroke-width=".5"/>
+          <circle class="ring-track" cx="110" cy="110" r="100" fill="none" stroke="rgba(0,245,212,0.25)" stroke-width="1.5" stroke-dasharray="40 588" stroke-linecap="round"/>
+          <circle class="ring-dot" cx="110" cy="10" r="3" fill="var(--cyan)"/>
+          <text x="110" y="104" text-anchor="middle" fill="rgba(0,245,212,0.4)" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="3">CHAPTER</text>
+          <text class="ring-num" id="ringNum" x="110" y="126" text-anchor="middle" fill="white" font-family="Syne, sans-serif" font-size="32" font-weight="700">01</text>
+        </svg>
+        <div class="telem">
+          <div class="telem-row"><span class="telem-label">STATUS</span><span class="telem-val telem-live">WAITING</span></div>
+          <div class="telem-row"><span class="telem-label">SESSION</span><span class="telem-val" id="telemSession">047</span></div>
+          <div class="telem-row"><span class="telem-label">VIBE</span><span class="telem-val" id="telemVibe">CURIOUS</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dock" id="dock">
+      <div class="dock-q">
+        <button class="dock-start" id="startBtn">START</button>
+        <p class="dock-label">SET YOUR VIBE</p>
+        <p class="dock-prompt" id="prompt"></p>
+        <div class="dock-chips" id="promptChips"></div>
+        <div class="dock-answer">
+          <input type="text" class="dock-answer-input" id="answerInput" placeholder="Or type your own answer..." maxlength="120" autocomplete="off" />
+          <button class="dock-mic" id="micBtn" title="Speak your answer">🎤</button>
+        </div>
+        <p class="dock-transcript" id="transcript"></p>
+      </div>
+      <div class="dock-divider"></div>
+      <div class="dock-queue">
+        <p class="dock-label">JOIN THE QUEUE</p>
+        <div class="dock-join">
+          <input type="text" class="dock-input" placeholder="Your name" id="nameInput" maxlength="24" autocomplete="off" />
+          <button class="dock-btn" id="joinBtn">JOIN</button>
+        </div>
+        <div class="dock-status" id="queueStatus">
+          <span class="dock-count" id="queueCount">3 in queue</span>
+          <span class="dock-sep">·</span>
+          <span class="dock-wait" id="queueWait">~15 min</span>
+        </div>
+        <div class="dock-names" id="queueNames"></div>
+      </div>
+    </section>
+
+    <footer class="base">
+      <div class="base-flow">
+        <span>MAP</span><span class="flow-arrow">→</span>
+        <span>AI</span><span class="flow-arrow">→</span>
+        <span>WHEEL</span><span class="flow-arrow">→</span>
+        <span>YOU</span>
+      </div>
+      <p class="base-quote" id="quote">The average commute in 2025 was 41 minutes. Most people hated it.</p>
+    </footer>
+
+  </main>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
