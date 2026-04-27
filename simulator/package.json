@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/genai": "^1.46.0",
+    "@needle-tools/engine": "^5.0.1",
     "3d-tiles-renderer": "^0.4.23",
-    "three": "^0.170.0"
+    "three": "npm:@needle-tools/three@0.169.19"
   },
   "devDependencies": {
     "vite": "^5.4.14"

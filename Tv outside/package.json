@@ -1,0 +1,13 @@
+{
+  "name": "flowlayer-brainstorming",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:ideas": "node scripts/generate-ideas.mjs",
+    "generate:images": "node scripts/generate-images.mjs",
+    "generate:veo": "node scripts/generate-veo.mjs"
+  },
+  "dependencies": {
+    "@google/genai": "^1.46.0"
+  }
+}

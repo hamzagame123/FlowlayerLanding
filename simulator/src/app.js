@@ -3,7 +3,7 @@
 
 import { PersonalizationEngine } from "./personalization.js";
 import { VoiceController } from "./voice.js";
-import { DrivingSimulator } from "./drivingSimulator.js";
+import { ThreeTilesSimulator } from "./threeTilesSimulator.js";
 
 export class FlowLayerApp {
     constructor() {
@@ -12,7 +12,7 @@ export class FlowLayerApp {
         this.voice = null;
         this.currentVibe = 'scenic';
         this.currentRoute = 'coastal';
-        this.selectedDestination = 'Golden Gate Bridge';
+        this.selectedDestination = 'CN Tower';
         this.playlist = [];
         this.currentDrive = null;
         this.feedback = {};
@@ -41,7 +41,10 @@ export class FlowLayerApp {
             return;
         }
 
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // Auto-skip the intro screen immediately during development
+        this.finishStoryExperience();
+        return;
+
         if (prefersReducedMotion) {
             storyLines.forEach(line => line.classList.add('visible'));
             storyButton.classList.add('ready');
@@ -163,21 +166,17 @@ export class FlowLayerApp {
         this.loadPlaylist();
         this.loadDriveSettings();
 
-        if (import.meta.env.DEV && new URLSearchParams(window.location.search).get('sim') === '1') {
-            this.personalization.profile = {
-                answers: {},
-                completedOnboarding: true,
-                createdAt: Date.now(),
-            };
-        }
+        // BYPASS ONBOARDING FOR TESTING
+        this.personalization.profile = {
+            answers: {},
+            completedOnboarding: true,
+            createdAt: Date.now(),
+        };
+        // Hardcode a default vibe test
+        this.personalization.getPreferredVibe = () => 'adventure';
+        this.personalization.inferRoutePreference = () => 'coastal';
         
-        // Check if user has completed onboarding
-        if (this.personalization.hasCompletedOnboarding()) {
-            this.startSimulator();
-        } else {
-            this.showScreen('onboarding');
-            this.personalization.init();
-        }
+        this.startSimulator();
         
         // Listen for onboarding complete
         window.addEventListener('onboardingComplete', (e) => {
@@ -215,12 +214,14 @@ export class FlowLayerApp {
     startSimulator() {
         this.showScreen('simulator');
         
-        // Initialize simulator if not already
+        // Initialize Native Cesium JS simulator if not already
         if (!this.simulator) {
-            this.simulator = new DrivingSimulator({
-                cesiumToken: import.meta.env.VITE_CESIUM_ION_TOKEN,
-            });
+            this.simulator = new ThreeTilesSimulator("cesiumContainer", import.meta.env.VITE_CESIUM_ION_TOKEN);
         }
+        this.simulator.setPlannerContext({
+            profile: this.personalization.profile,
+            testingBypass: true,
+        });
         
         // Initialize voice control
         if (!this.voice) {
@@ -228,13 +229,43 @@ export class FlowLayerApp {
             this.setupVoiceCallbacks();
         }
         
-        // Apply personalization settings
+        // Apply personalization settings natively
+        let initialVibe = "scenic"; 
         if (this.personalization.profile) {
             const vibe = this.personalization.getPreferredVibe();
             this.setVibe(vibe);
-            
-            // Set environment based on interpreted preferences
             this.setRoute(this.personalization.inferRoutePreference());
+        } else {
+            this.setVibe(initialVibe);
+        }
+
+        // Fire simulator.init() after screen transition completes (CSS takes ~500ms)
+        // so #cesiumContainer has real pixel dimensions before Cesium creates its canvas
+        setTimeout(() => {
+            this.simulator.init(this.currentVibe).catch(err => console.error("[FlowLayer] 3D tiles init error:", err));
+        }, 600);
+        
+        // Initialize voice control
+        if (!this.voice) {
+            try {
+                this.voice = new VoiceController();
+                this.setupVoiceCallbacks();
+            } catch(e) {
+                console.warn("[FlowLayer] Voice controller unavailable:", e);
+            }
+        }
+        
+        // Initialize MiniMap
+        if (!this.miniMap) {
+            import('./miniMap.js').then(module => {
+                this.miniMap = new module.MiniMap("miniMapContainer");
+                if (this.simulator) {
+                    this.simulator.miniMap = this.miniMap;
+                    if (typeof this.simulator.syncMiniMapRoute === 'function') {
+                        this.simulator.syncMiniMapRoute(this.currentVibe);
+                    }
+                }
+            }).catch(e => console.error("Could not load minimap:", e));
         }
         
         // Update UI
@@ -247,8 +278,8 @@ export class FlowLayerApp {
         // Register voice command callbacks
         this.voice.on('start', () => this.startDrive());
         this.voice.on('stop', () => this.endDrive());
-        this.voice.on('speed up', () => this.simulator.accelerate());
-        this.voice.on('slow down', () => this.simulator.decelerate());
+        this.voice.on('speed up', () => this.simulator.accelerate && this.simulator.accelerate());
+        this.voice.on('slow down', () => this.simulator.decelerate && this.simulator.decelerate());
         this.voice.on('scenic', () => this.setVibe('scenic'));
         this.voice.on('chill', () => this.setVibe('chill'));
         this.voice.on('adventure', () => this.setVibe('adventure'));
@@ -280,6 +311,16 @@ export class FlowLayerApp {
             endBtn.addEventListener('click', () => this.endDrive());
         }
 
+        const freeBtn = document.getElementById('freeDriveBtn');
+        if (freeBtn) {
+            freeBtn.addEventListener('click', () => {
+                if (this.simulator && typeof this.simulator.toggleManualDrive === 'function') {
+                    this.simulator.toggleManualDrive();
+                    freeBtn.classList.toggle('active', this.simulator._isManualDrive);
+                }
+            });
+        }
+
         const camBtn = document.getElementById('cameraModeBtn');
         if (camBtn) {
             camBtn.addEventListener('click', () => {
@@ -294,7 +335,127 @@ export class FlowLayerApp {
             btn.addEventListener('click', () => {
                 const vibe = btn.dataset.vibe;
                 this.setVibe(vibe);
+                this.showToast(`Vibe changed to ${vibe}`);
             });
+        });
+
+        // Listen for route loaded → build animated AI step cards
+        window.addEventListener('routeLoaded', async (e) => {
+            const { steps, startLocation, planning } = e.detail;
+            const listEl = document.getElementById('navStepList');
+            if (!listEl) return;
+
+            // Clear previous cards
+            listEl.innerHTML = '';
+
+            if (!steps || steps.length === 0) {
+                listEl.innerHTML = '<p class="route-loading-hint">No steps found for this route.</p>';
+                return;
+            }
+
+            // Vibe accent colours
+            const vibeAccents = {
+                scenic: '#c8a96e', chill: '#00f5d4',
+                adventure: '#f72585', fastest: '#8090a0'
+            };
+            const accentColor = vibeAccents[this.currentVibe] || 'var(--accent-primary)';
+
+            // Direction emoji helpers
+            const dirIcon = (instr) => {
+                const t = (instr || '').toLowerCase();
+                if (t.includes('left'))  return '↰';
+                if (t.includes('right')) return '↱';
+                if (t.includes('merge') || t.includes('onto')) return '⤴';
+                if (t.includes('dest'))  return '📍';
+                return '↑';
+            };
+
+            // Build a card for each step
+            const cards = steps.map((step, i) => {
+                const card = document.createElement('div');
+                card.className = 'nav-step-card';
+                card.style.setProperty('--step-accent', accentColor);
+                card.dataset.stepIndex = i;
+
+                // Strip HTML from instruction
+                const plainInstr = (step.instruction || '').replace(/<[^>]*>/g, '');
+
+                card.innerHTML = `
+                    <div class="nav-step-header">
+                        <span class="nav-step-icon">${dirIcon(plainInstr)}</span>
+                        <span class="nav-step-instruction">${plainInstr}</span>
+                        <span class="nav-step-dist">${step.distance || ''}</span>
+                    </div>
+                    <p class="nav-step-ai-text" id="stepAi${i}"></p>
+                `;
+                listEl.appendChild(card);
+                return card;
+            });
+
+            // Stagger slide-in animation
+            cards.forEach((card, i) => {
+                setTimeout(() => card.classList.add('slide-in'), i * 80);
+            });
+
+            // Mark first card active
+            if (cards[0]) cards[0].classList.add('active');
+
+            // Keep the step cards plain for simulator testing.
+            const streamStep = async (stepIndex) => {
+                const step = steps[stepIndex];
+                const aiEl = document.getElementById(`stepAi${stepIndex}`);
+                if (!aiEl || !step) return;
+
+                const plainInstr = (step.instruction || '').replace(/<[^>]*>/g, '');
+                aiEl.textContent = step.distance
+                    ? `${plainInstr} for ${step.distance}.`
+                    : plainInstr;
+                aiEl.classList.add('done');
+            };
+
+            // Stream narration for first step immediately
+            streamStep(0);
+
+            // Track car position to advance the active step
+            let activeStep = 0;
+            const totalSteps = steps.length;
+
+            // Build cumulative distance thresholds from route steps
+            let cumDist = 0;
+            const thresholds = steps.map(s => {
+                const metres = Number.isFinite(s.distanceMeters)
+                    ? s.distanceMeters
+                    : (parseFloat((s.distance || '0').replace(/[^0-9.]/g, '')) || 0);
+                cumDist += metres;
+                return cumDist;
+            });
+
+            // Advance cards as distance accumulates during drive
+            const _advanceCards = (travelledMetres) => {
+                if (activeStep >= totalSteps - 1) return;
+
+                // Check if driver has passed the current step's threshold
+                if (travelledMetres >= (thresholds[activeStep] || Infinity) * 0.9) {
+                    // Collapse previous active card
+                    if (cards[activeStep]) {
+                        cards[activeStep].classList.remove('active');
+                        cards[activeStep].classList.add('past');
+                    }
+                    activeStep++;
+                    if (cards[activeStep]) {
+                        cards[activeStep].classList.add('active');
+                        // Scroll into view
+                        cards[activeStep].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        // Stream AI for this step
+                        streamStep(activeStep);
+                    }
+                }
+            };
+
+            // Hook into the simulator's telemetry to advance cards
+            if (this.simulator) {
+                this.simulator._advanceNavCards = _advanceCards;
+            }
         });
         
         // Route cards
@@ -464,6 +625,7 @@ export class FlowLayerApp {
     // Vibe & Route Control
     setVibe(vibe) {
         this.currentVibe = vibe;
+        
         this.updateVibeUI();
         if (this.simulator && typeof this.simulator.setVibe === 'function') {
             this.simulator.setVibe(vibe);
@@ -524,6 +686,7 @@ export class FlowLayerApp {
             destinationInput.blur();
             this.selectedDestination = destinationInput.value.trim() || 'Untitled Destination';
             this.showToast(`Destination set: ${this.selectedDestination}`);
+            this.setRoute(this.selectedDestination);
         });
 
         if (!destinationVoiceBtn) return;
@@ -852,4 +1015,3 @@ export class FlowLayerApp {
         console.log('Voice command received:', command);
     }
 }
-

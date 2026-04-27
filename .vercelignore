@@ -1,0 +1,30 @@
+# Local dependencies and build output
+node_modules/
+dist/
+simulator-cesium-restore/node_modules/
+simulator-cesium-restore/dist/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+simulator-cesium-restore/.env
+simulator-cesium-restore/.env.*
+!simulator-cesium-restore/.env.example
+
+# Legacy/reference simulator folders not used by the deployed Motional build
+simulator/
+simulator-v2/
+brainstorming/
+
+# Local editor/history/test artifacts
+.vercel/
+.playwright-mcp/
+.vscode/
+.specstory/
+%TEMP%/
+*.log
+*.png
+tmp-*
+v2-*
+flowlayer-*

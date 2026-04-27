@@ -349,7 +349,7 @@ export class PersonalizationEngine {
         if (/(rush|adrenaline|thrill|intense|fast|excited)/.test(combined)) return 'adventure';
         if (/(calm|soft|gentle|relax|breathe|quiet|reset|peace)/.test(combined)) return 'chill';
         if (/(scenic|nature|views|sunset|water|mountain|forest|explore)/.test(combined)) return 'scenic';
-        return 'fastest';
+        return 'scenic';
     }
 
     getTimeOfDaySetting() {

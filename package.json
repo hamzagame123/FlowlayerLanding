@@ -1,0 +1,12 @@
+{
+  "name": "flowlayer-installation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm --prefix simulator-cesium-restore install && npm --prefix simulator-cesium-restore run build && node scripts/build-vercel.mjs",
+    "serve": "node scripts/serve-dist.mjs"
+  },
+  "dependencies": {
+    "@google/genai": "^1.46.0"
+  }
+}

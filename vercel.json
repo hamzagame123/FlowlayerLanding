@@ -1,0 +1,26 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/simulator",
+      "destination": "/simulator/index.html"
+    },
+    {
+      "source": "/simulator/(.*)",
+      "destination": "/simulator/$1"
+    },
+    {
+      "source": "/outside",
+      "destination": "/outside/index.html"
+    },
+    {
+      "source": "/outside/(.*)",
+      "destination": "/outside/$1"
+    }
+  ]
+}

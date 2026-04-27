@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <!-- Cinematic Story Intro -->
@@ -83,8 +85,8 @@
     
     <!-- Main Simulator Screen -->
     <div id="simulator" class="screen">
-        <!-- Three.js Canvas Container -->
-        <div id="simulatorCanvas"></div>
+        <!-- Native CesiumJS Canvas Container -->
+        <needle-engine id="cesiumContainer" camera-controls="false"></needle-engine>
         
         <!-- Minimal Top Bar -->
         <header class="sim-header">
@@ -102,12 +104,12 @@
                 <div class="destination-panel">
                     <div class="destination-input-wrap">
                         <span class="destination-icon">📍</span>
-                        <input id="destinationInputSim" class="destination-input" type="text" placeholder="Where do you want to go?" value="Golden Gate Bridge">
+                        <input id="destinationInputSim" class="destination-input" type="text" placeholder="Where do you want to go?" value="CN Tower">
                         <button class="destination-voice-btn" id="destinationVoiceBtn" type="button" title="Speak destination">🎙️</button>
                     </div>
                     <div class="current-route" id="currentRoute">
                         <span class="route-icon">🛤️</span>
-                        <span class="route-name">Coastal Highway</span>
+                        <span class="route-name">Toronto Downtown</span>
                     </div>
                 </div>
             </div>
@@ -168,6 +170,14 @@
                             <span>⚡</span>
                             <span>Fast</span>
                         </button>
+                    </div>
+                </div>
+
+                <!-- AI Navigation Step Cards -->
+                <div class="assistant-section ai-dialogue-section">
+                    <label class="section-label">AI Navigation</label>
+                    <div id="navStepList" class="nav-step-list">
+                        <p class="route-loading-hint" id="navStepHint">Awaiting route...</p>
                     </div>
                 </div>
                 
@@ -245,7 +255,13 @@
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <polygon points="5 3 19 12 5 21 5 3"/>
                         </svg>
-                        <span>Start Drive</span>
+                        <span>Start Route</span>
+                    </button>
+                    <button class="control-btn" id="freeDriveBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M11.99 2L4.5 20.29L5.21 21L12 18L18.79 21L19.5 20.29L12 2Z"/>
+                        </svg>
+                        <span>Free Drive</span>
                     </button>
                     <button class="control-btn hidden" id="endDriveBtn">
                         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -270,10 +286,13 @@
         <p class="sim-three-hint" id="simThreeHint">W/S drive · A/D steer · Wheel zoom · <strong>Look</strong> + right-drag to orbit</p>
         <p class="cesium-credit" id="cesiumCredit">
             3D city:
-            <a href="https://cesium.com/platform/cesium-ion/content/cesium-osm-buildings" target="_blank" rel="noopener noreferrer">Cesium OSM Buildings</a>
+            <a href="https://github.com/NASA-AMMOS/3DTilesRendererJS" target="_blank" rel="noopener noreferrer">3DTilesRendererJS</a>
             ·
             <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap</a>
         </p>
+
+        <!-- Mini-Map Overlay -->
+        <div id="miniMapContainer"></div>
 
         <!-- Voice Feedback Overlay -->
         <div class="voice-overlay" id="voiceOverlay">
