@@ -7,18 +7,18 @@
 }
 
 :root {
-    --bg-void: #060811;
-    --bg-surface: #0a0f18;
-    --bg-elevated: #101723;
-    --bg-hover: #172334;
-    --border-subtle: rgba(187, 216, 255, 0.08);
-    --border-medium: rgba(187, 216, 255, 0.18);
+    --bg-void: #020912;
+    --bg-surface: #060910;
+    --bg-elevated: #0e1118;
+    --bg-hover: #171b24;
+    --border-subtle: rgba(204, 219, 213, 0.08);
+    --border-medium: rgba(204, 219, 213, 0.18);
     
-    --accent-primary: #67e8f9;
-    --accent-secondary: #60a5fa;
+    --accent-primary: #00ffe1;
+    --accent-secondary: #00ff91;
     --accent-warm: #fbbf24;
-    --accent-scenic: #06d6a0;
-    --accent-adventure: #38bdf8;
+    --accent-scenic: #ff5cff;
+    --accent-adventure: #00ffe1;
     
     --text-primary: #ffffff;
     --text-secondary: rgba(235, 244, 255, 0.72);
@@ -164,18 +164,18 @@ button {
 
 .route-place-marker.vibe-adventure .route-place-beam,
 .route-place-marker.vibe-adventure .route-place-dot {
-    background: linear-gradient(180deg, rgba(247, 37, 133, 0), rgba(247, 37, 133, 0.92));
+    background: linear-gradient(180deg, rgba(0, 255, 225, 0), rgba(0, 255, 225, 0.92));
 }
 
 .route-place-marker.vibe-adventure .route-place-dot {
-    background: rgba(247, 37, 133, 0.94);
+    background: rgba(0, 255, 225, 0.94);
     box-shadow:
-        0 0 0 8px rgba(247, 37, 133, 0.09),
-        0 0 22px rgba(247, 37, 133, 0.35);
+        0 0 0 8px rgba(0, 255, 225, 0.09),
+        0 0 22px rgba(0, 255, 225, 0.35);
 }
 
 .route-place-marker.vibe-adventure .route-place-chip {
-    border-color: rgba(247, 37, 133, 0.22);
+    border-color: rgba(0, 255, 225, 0.22);
 }
 
 .route-place-marker.vibe-fastest .route-place-beam,
@@ -1307,8 +1307,8 @@ button {
 
 .street-memory-pod.vibe-adventure .street-memory-pod-core,
 .street-memory-witness.vibe-adventure .street-memory-witness-body {
-    border-color: rgba(244, 114, 182, 0.38);
-    background: linear-gradient(90deg, rgba(20, 12, 24, 0.9), rgba(247, 37, 133, 0.58));
+    border-color: rgba(0, 255, 225, 0.38);
+    background: linear-gradient(90deg, rgba(6, 18, 20, 0.9), rgba(0, 255, 225, 0.52));
 }
 
 .street-memory-pod.vibe-fastest .street-memory-pod-core,
