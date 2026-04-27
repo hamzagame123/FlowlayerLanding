@@ -180,18 +180,18 @@ button {
 
 .route-place-marker.vibe-fastest .route-place-beam,
 .route-place-marker.vibe-fastest .route-place-dot {
-    background: linear-gradient(180deg, rgba(255, 159, 28, 0), rgba(255, 159, 28, 0.92));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.96));
 }
 
 .route-place-marker.vibe-fastest .route-place-dot {
-    background: rgba(255, 159, 28, 0.94);
+    background: rgba(255, 255, 255, 0.96);
     box-shadow:
-        0 0 0 8px rgba(255, 159, 28, 0.09),
-        0 0 22px rgba(255, 159, 28, 0.3);
+        0 0 0 8px rgba(255, 255, 255, 0.12),
+        0 0 22px rgba(255, 255, 255, 0.34);
 }
 
 .route-place-marker.vibe-fastest .route-place-chip {
-    border-color: rgba(255, 159, 28, 0.2);
+    border-color: rgba(255, 255, 255, 0.26);
 }
 
 #cesiumContainer.mapbox-style-timeout .mapboxgl-canvas-container {
@@ -1313,8 +1313,8 @@ button {
 
 .street-memory-pod.vibe-fastest .street-memory-pod-core,
 .street-memory-witness.vibe-fastest .street-memory-witness-body {
-    border-color: rgba(251, 191, 36, 0.4);
-    background: linear-gradient(90deg, rgba(28, 18, 10, 0.88), rgba(255, 159, 28, 0.6));
+    border-color: rgba(255, 255, 255, 0.44);
+    background: linear-gradient(90deg, rgba(245, 245, 241, 0.88), rgba(255, 255, 255, 0.64));
 }
 
 .street-memory-witness {

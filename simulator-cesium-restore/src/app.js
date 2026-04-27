@@ -577,8 +577,8 @@ export class FlowLayerApp {
 
             // Vibe accent colours
             const vibeAccents = {
-                scenic: '#c8a96e', chill: '#00f5d4',
-                adventure: '#f72585', fastest: '#8090a0'
+                scenic: '#050505', chill: '#00f5d4',
+                adventure: '#00ffe1', fastest: '#ffffff'
             };
             const accentColor = vibeAccents[this.currentVibe] || 'var(--accent-primary)';
 

@@ -9,10 +9,10 @@ mapboxgl.workerClass = MapboxWorker;
 
 const TORONTO_ORIGIN = { lat: 43.6433, lng: -79.3713 };
 const VIBE_COLORS = {
-    scenic: "#ff5cff",
+    scenic: "#050505",
     chill: "#68d9ff",
     adventure: "#00ffe1",
-    fastest: "#ff9f1c",
+    fastest: "#ffffff",
 };
 
 const LEGACY_MAPBOX_SKIN = {
@@ -25,6 +25,59 @@ const LEGACY_MAPBOX_SKIN = {
     buildingBase: "#77786b",
     buildingTop: "#c7c8ba",
     buildingLine: "#d6d8ca",
+};
+
+const MAPBOX_SKINS = {
+    scenic: {
+        void: "#000000",
+        water: "#000000",
+        land: "#000000",
+        park: "#000000",
+        road: "#050505",
+        fill: "#020202",
+        grid: "#141414",
+        gridHot: "#242424",
+        label: "#5a5a5a",
+        labelHalo: "#000000",
+        buildingBase: "#050505",
+        buildingMid: "#1a1a1a",
+        buildingTop: "#303030",
+        extrusionOpacity: 0.72,
+    },
+    chill: {
+        ...LEGACY_MAPBOX_SKIN,
+        park: "#111b16",
+        fill: "#22251f",
+        label: "#aeb8b5",
+        labelHalo: LEGACY_MAPBOX_SKIN.void,
+        buildingMid: "#9fa193",
+        extrusionOpacity: 0.62,
+    },
+    adventure: {
+        ...LEGACY_MAPBOX_SKIN,
+        park: "#111b16",
+        fill: "#22251f",
+        label: "#aeb8b5",
+        labelHalo: LEGACY_MAPBOX_SKIN.void,
+        buildingMid: "#9fa193",
+        extrusionOpacity: 0.64,
+    },
+    fastest: {
+        void: "#ffffff",
+        water: "#ffffff",
+        land: "#ffffff",
+        park: "#ffffff",
+        road: "#ffffff",
+        fill: "#ffffff",
+        grid: "#ffffff",
+        gridHot: "#ffffff",
+        label: "#343434",
+        labelHalo: "#ffffff",
+        buildingBase: "#f2f2ed",
+        buildingMid: "#ffffff",
+        buildingTop: "#ffffff",
+        extrusionOpacity: 0.82,
+    },
 };
 
 const ROUTE_DESTINATIONS = {
@@ -235,17 +288,17 @@ export class MapboxSimulator {
                 basemap: {
                     theme: "monochrome",
                     lightPreset: "night",
-                    show3dObjects: false,
-                    show3dBuildings: false,
+                    show3dObjects: true,
+                    show3dBuildings: true,
                     show3dTrees: false,
-                    show3dLandmarks: false,
-                    show3dFacades: false,
+                    show3dLandmarks: true,
+                    show3dFacades: true,
                     showPointOfInterestLabels: false,
                     showTransitLabels: false,
                     showPedestrianRoads: true,
-                    colorWater: LEGACY_MAPBOX_SKIN.water,
-                    colorRoads: LEGACY_MAPBOX_SKIN.road,
-                    colorGreenspace: "#17241d",
+                    colorWater: MAPBOX_SKINS.scenic.water,
+                    colorRoads: MAPBOX_SKINS.scenic.road,
+                    colorGreenspace: MAPBOX_SKINS.scenic.park,
                 },
             },
             center: this.currentLngLat,
@@ -1054,13 +1107,14 @@ export class MapboxSimulator {
 
     _applyLegacyMapboxSkin(vibeId = this.currentVibe) {
         if (!this.map?.getStyle?.()) return;
+        const skin = this._getMapSkin(vibeId);
 
         try {
             this.map.setFog({
-                color: LEGACY_MAPBOX_SKIN.void,
-                "high-color": "#071522",
+                color: skin.void,
+                "high-color": vibeId === "fastest" ? "#ffffff" : skin.water,
                 "horizon-blend": 0.03,
-                "space-color": "#01040a",
+                "space-color": skin.void,
                 "star-intensity": 0,
             });
         } catch {
@@ -1069,28 +1123,28 @@ export class MapboxSimulator {
 
         for (const layer of this.map.getStyle().layers || []) {
             if (layer.type === "background") {
-                this._setPaintIfLayerExists(layer.id, "background-color", LEGACY_MAPBOX_SKIN.void);
+                this._setPaintIfLayerExists(layer.id, "background-color", skin.void);
             }
 
             if (layer.type === "fill" && /water|land|park|building/i.test(layer.id)) {
                 const fillColor = /water/i.test(layer.id)
-                    ? LEGACY_MAPBOX_SKIN.water
+                    ? skin.water
                     : /park|landuse|green/i.test(layer.id)
-                        ? "#111b16"
-                        : "#22251f";
+                        ? skin.park
+                        : skin.fill;
                 this._setPaintIfLayerExists(layer.id, "fill-color", fillColor);
                 this._setPaintIfLayerExists(layer.id, "fill-opacity", /water/i.test(layer.id) ? 1 : 0.72);
             }
 
             if (layer.type === "line" && /road|street|bridge|tunnel|path/i.test(layer.id)) {
-                this._setPaintIfLayerExists(layer.id, "line-color", LEGACY_MAPBOX_SKIN.road);
-                this._setPaintIfLayerExists(layer.id, "line-opacity", 0.38);
+                this._setPaintIfLayerExists(layer.id, "line-color", skin.road);
+                this._setPaintIfLayerExists(layer.id, "line-opacity", vibeId === "fastest" ? 0.7 : 0.38);
                 this._setPaintIfLayerExists(layer.id, "line-emissive-strength", 0.08);
             }
 
             if (layer.type === "symbol") {
-                this._setPaintIfLayerExists(layer.id, "text-color", "#aeb8b5");
-                this._setPaintIfLayerExists(layer.id, "text-halo-color", LEGACY_MAPBOX_SKIN.void);
+                this._setPaintIfLayerExists(layer.id, "text-color", skin.label);
+                this._setPaintIfLayerExists(layer.id, "text-halo-color", skin.labelHalo);
                 this._setPaintIfLayerExists(layer.id, "text-halo-width", 1);
                 this._setPaintIfLayerExists(layer.id, "icon-opacity", 0.28);
                 this._setPaintIfLayerExists(layer.id, "text-opacity", 0.42);
@@ -1102,26 +1156,31 @@ export class MapboxSimulator {
                     ["linear"],
                     ["coalesce", ["get", "height"], 20],
                     0,
-                    LEGACY_MAPBOX_SKIN.buildingBase,
+                    skin.buildingBase,
                     80,
-                    "#9fa193",
+                    skin.buildingMid,
                     220,
-                    LEGACY_MAPBOX_SKIN.buildingTop,
+                    skin.buildingTop,
                 ]);
-                this._setPaintIfLayerExists(layer.id, "fill-extrusion-opacity", 0.58);
+                this._setPaintIfLayerExists(layer.id, "fill-extrusion-opacity", skin.extrusionOpacity);
                 this._setPaintIfLayerExists(layer.id, "fill-extrusion-vertical-gradient", true);
                 this._setPaintIfLayerExists(layer.id, "fill-extrusion-emissive-strength", 0.08);
             }
         }
 
-        this._setLegacyBuildingLayer();
+        this._setLegacyBuildingLayer(vibeId);
         this._setCityGridLayers(vibeId);
+    }
+
+    _getMapSkin(vibeId) {
+        return MAPBOX_SKINS[vibeId] || MAPBOX_SKINS.scenic;
     }
 
     _setCityGridLayers(vibeId = this.currentVibe) {
         if (!this.map?.isStyleLoaded?.()) return;
 
         const style = this._getRouteStyle(vibeId);
+        const skin = this._getMapSkin(vibeId);
         const sourceId = "flowlayer-city-grid";
 
         if (!this.map.getSource(sourceId)) {
@@ -1142,7 +1201,7 @@ export class MapboxSimulator {
             source: sourceId,
             layout: { "line-cap": "round", "line-join": "round" },
             paint: {
-                "line-color": LEGACY_MAPBOX_SKIN.grid,
+                "line-color": skin.grid,
                 "line-width": ["interpolate", ["linear"], ["zoom"], 13, 1.2, 18, 4.2, 21, 7.6],
                 "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0.18, 16, 0.44, 20, 0.34],
                 "line-blur": 4,
@@ -1156,7 +1215,7 @@ export class MapboxSimulator {
             source: sourceId,
             layout: { "line-cap": "round", "line-join": "round" },
             paint: {
-                "line-color": LEGACY_MAPBOX_SKIN.grid,
+                "line-color": skin.gridHot,
                 "line-width": ["interpolate", ["linear"], ["zoom"], 13, 0.5, 18, 1.5, 21, 2.8],
                 "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0.42, 16, 0.82, 20, 0.62],
                 "line-emissive-strength": 1,
@@ -1167,9 +1226,10 @@ export class MapboxSimulator {
         this.map.setPaintProperty("flowlayer-city-grid-core", "line-color", style.end);
     }
 
-    _setLegacyBuildingLayer() {
+    _setLegacyBuildingLayer(vibeId = this.currentVibe) {
         if (!this.map?.getStyle?.()?.sources?.composite) return;
 
+        const skin = this._getMapSkin(vibeId);
         const layerId = "flowlayer-legacy-buildings";
         const firstSymbolLayer = this.map.getStyle().layers.find(layer => layer.type === "symbol")?.id;
         const paint = {
@@ -1178,15 +1238,15 @@ export class MapboxSimulator {
                 ["linear"],
                 ["coalesce", ["get", "height"], 18],
                 0,
-                LEGACY_MAPBOX_SKIN.buildingBase,
+                skin.buildingBase,
                 90,
-                "#a2a497",
+                skin.buildingMid,
                 240,
-                LEGACY_MAPBOX_SKIN.buildingTop,
+                skin.buildingTop,
             ],
             "fill-extrusion-height": ["coalesce", ["get", "height"], 14],
             "fill-extrusion-base": ["coalesce", ["get", "min_height"], 0],
-            "fill-extrusion-opacity": 0.72,
+            "fill-extrusion-opacity": skin.extrusionOpacity,
             "fill-extrusion-vertical-gradient": true,
             "fill-extrusion-emissive-strength": 0.12,
         };
@@ -1212,12 +1272,12 @@ export class MapboxSimulator {
     _getRouteStyle(vibeId) {
         const byVibe = {
             scenic: {
-                glow: "#ff5cff",
-                casing: "#fff0ff",
-                start: "#ff9dff",
-                end: "#d91bff",
-                marker: "#fff0ff",
-                markerStroke: "#ff5cff",
+                glow: "#151515",
+                casing: "#262626",
+                start: "#101010",
+                end: "#000000",
+                marker: "#090909",
+                markerStroke: "#303030",
             },
             chill: {
                 glow: "#68d9ff",
@@ -1236,12 +1296,12 @@ export class MapboxSimulator {
                 markerStroke: "#00ffe1",
             },
             fastest: {
-                glow: "#ffc566",
-                casing: "#fff5df",
-                start: "#ffd78f",
-                end: "#ff9f1c",
-                marker: "#fff7ea",
-                markerStroke: "#ff9f1c",
+                glow: "#ffffff",
+                casing: "#ffffff",
+                start: "#ffffff",
+                end: "#f6f6f1",
+                marker: "#ffffff",
+                markerStroke: "#d8d8d2",
             },
         };
         return byVibe[vibeId] || byVibe.scenic;
@@ -1592,69 +1652,22 @@ export class MapboxSimulator {
     applyVibeAesthetics(vibeId) {
         if (!this.map) return;
         try {
-            const basemapByVibe = {
-                scenic: {
-                    lightPreset: "night",
-                    theme: "monochrome",
-                    show3dObjects: false,
-                    show3dBuildings: false,
-                    show3dTrees: false,
-                    show3dLandmarks: false,
-                    show3dFacades: false,
-                    showPointOfInterestLabels: false,
-                    showTransitLabels: false,
-                    showPedestrianRoads: true,
-                    colorGreenspace: "#17241d",
-                    colorWater: LEGACY_MAPBOX_SKIN.water,
-                    colorRoads: LEGACY_MAPBOX_SKIN.road,
-                },
-                chill: {
-                    lightPreset: "night",
-                    theme: "monochrome",
-                    show3dObjects: false,
-                    show3dBuildings: false,
-                    show3dTrees: false,
-                    show3dLandmarks: false,
-                    show3dFacades: false,
-                    showPointOfInterestLabels: false,
-                    showTransitLabels: false,
-                    showPedestrianRoads: true,
-                    colorGreenspace: "#13212a",
-                    colorWater: LEGACY_MAPBOX_SKIN.water,
-                    colorRoads: LEGACY_MAPBOX_SKIN.road,
-                },
-                adventure: {
-                    lightPreset: "night",
-                    theme: "monochrome",
-                    show3dObjects: false,
-                    show3dBuildings: false,
-                    show3dTrees: false,
-                    show3dLandmarks: false,
-                    show3dFacades: false,
-                    showPointOfInterestLabels: false,
-                    showTransitLabels: false,
-                    showPedestrianRoads: true,
-                    colorGreenspace: "#15231d",
-                    colorWater: LEGACY_MAPBOX_SKIN.water,
-                    colorRoads: LEGACY_MAPBOX_SKIN.road,
-                },
-                fastest: {
-                    lightPreset: "night",
-                    theme: "monochrome",
-                    show3dObjects: false,
-                    show3dBuildings: false,
-                    show3dTrees: false,
-                    show3dLandmarks: false,
-                    show3dFacades: false,
-                    showPointOfInterestLabels: false,
-                    showTransitLabels: false,
-                    showPedestrianRoads: false,
-                    colorGreenspace: "#202016",
-                    colorWater: LEGACY_MAPBOX_SKIN.water,
-                    colorRoads: LEGACY_MAPBOX_SKIN.road,
-                },
+            const skin = this._getMapSkin(vibeId);
+            const config = {
+                lightPreset: vibeId === "fastest" ? "day" : "night",
+                theme: vibeId === "fastest" ? "faded" : "monochrome",
+                show3dObjects: true,
+                show3dBuildings: true,
+                show3dTrees: false,
+                show3dLandmarks: true,
+                show3dFacades: true,
+                showPointOfInterestLabels: false,
+                showTransitLabels: false,
+                showPedestrianRoads: vibeId !== "fastest",
+                colorGreenspace: skin.park,
+                colorWater: skin.water,
+                colorRoads: skin.road,
             };
-            const config = basemapByVibe[vibeId] || basemapByVibe.scenic;
             for (const [key, value] of Object.entries(config)) {
                 this.map.setConfigProperty("basemap", key, value);
             }
